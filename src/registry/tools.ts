@@ -21,7 +21,7 @@ export const TOOLS: ToolMeta[] = [
     description: 'Encode text to Base64 or decode Base64 back to plain text.',
     icon: '🔤',
     category: 'text',
-    status: 'planned',
+    status: 'ready',
   },
   {
     id: 'json-formatter',
@@ -29,7 +29,7 @@ export const TOOLS: ToolMeta[] = [
     description: 'Prettify or minify JSON with syntax highlighting.',
     icon: '📋',
     category: 'data',
-    status: 'planned',
+    status: 'ready',
   },
   {
     id: 'color-converter',
@@ -37,7 +37,7 @@ export const TOOLS: ToolMeta[] = [
     description: 'Convert between HEX, RGB, HSL, and CSS color formats.',
     icon: '🎨',
     category: 'color',
-    status: 'planned',
+    status: 'ready',
   },
   {
     id: 'markdown-preview',
@@ -45,7 +45,7 @@ export const TOOLS: ToolMeta[] = [
     description: 'Type Markdown on the left, see rendered HTML on the right.',
     icon: '📝',
     category: 'text',
-    status: 'planned',
+    status: 'ready',
   },
   {
     id: 'url-encoder',
@@ -53,7 +53,7 @@ export const TOOLS: ToolMeta[] = [
     description: 'Encode or decode URL components and query strings.',
     icon: '🔗',
     category: 'web',
-    status: 'planned',
+    status: 'ready',
   },
   {
     id: 'regex-tester',
@@ -61,7 +61,7 @@ export const TOOLS: ToolMeta[] = [
     description: 'Write a regular expression and test it against sample text.',
     icon: '🔍',
     category: 'text',
-    status: 'planned',
+    status: 'ready',
   },
   {
     id: 'timestamp-converter',
@@ -69,15 +69,15 @@ export const TOOLS: ToolMeta[] = [
     description: 'Convert Unix timestamps to human-readable dates and back.',
     icon: '⏱️',
     category: 'misc',
-    status: 'planned',
+    status: 'ready',
   },
   {
     id: 'hash-generator',
     name: 'Hash Generator',
-    description: 'Generate MD5, SHA-1, SHA-256, and SHA-512 hashes from text.',
+    description: 'Generate SHA-1, SHA-256, SHA-384, and SHA-512 hashes from text.',
     icon: '#️⃣',
     category: 'data',
-    status: 'planned',
+    status: 'ready',
   },
 ];
 

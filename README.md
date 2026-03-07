@@ -10,14 +10,31 @@ A collection of simple, browser-based tools for everyday developer tasks — no 
 
 | Tool | Category | Status |
 |------|----------|--------|
-| Base64 Encoder / Decoder | Text | Planned |
-| JSON Formatter | Data | Planned |
-| Color Converter | Color | Planned |
-| Markdown Preview | Text | Planned |
-| URL Encoder / Decoder | Web | Planned |
-| Regex Tester | Text | Planned |
-| Timestamp Converter | Misc | Planned |
-| Hash Generator | Data | Planned |
+| Base64 Encoder / Decoder | Text | ✅ Ready |
+| JSON Formatter | Data | ✅ Ready |
+| Color Converter | Color | ✅ Ready |
+| Markdown Preview | Text | ✅ Ready |
+| URL Encoder / Decoder | Web | ✅ Ready |
+| Regex Tester | Text | ✅ Ready |
+| Timestamp Converter | Misc | ✅ Ready |
+| Hash Generator | Data | ✅ Ready |
+
+---
+
+## Usage
+
+Click any tool card on the home page to open it. All processing happens locally in your browser — no data is sent to any server.
+
+### Tool highlights
+
+- **Base64** — encode or decode text with a single click; swap input/output instantly.
+- **JSON Formatter** — prettify with configurable indentation (1/2/4 spaces) or minify; copy output to clipboard.
+- **Color Converter** — convert between HEX, RGB, and HSL; includes a native color picker; click any CSS value to copy it.
+- **Markdown Preview** — live side-by-side rendering; supports headings, bold/italic, code blocks, lists, blockquotes, and links.
+- **URL Encoder / Decoder** — choose between `encodeURIComponent` (component mode) and `encodeURI` (full URL mode).
+- **Regex Tester** — real-time match highlighting with per-match detail (index, capture groups); supports all JS flags.
+- **Timestamp Converter** — converts Unix timestamps (seconds or milliseconds) ↔ human-readable dates; includes a "Now" button.
+- **Hash Generator** — uses the browser Web Crypto API to compute SHA-1, SHA-256, SHA-384, and SHA-512 hashes.
 
 ---
 
@@ -43,6 +60,7 @@ npm run preview
 - [React](https://react.dev) — UI framework
 - [TypeScript](https://www.typescriptlang.org) — type safety
 - CSS custom properties — design system (no CSS framework dependency)
+- Web Crypto API — hashing (SHA-1/256/384/512)
 
 ## Deployment
 
