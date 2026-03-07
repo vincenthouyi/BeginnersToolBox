@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import './styles/design-system.css';
 import './App.css';
+import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { TOOLS, type ToolMeta } from './registry/tools';
 import { ToolCard } from './components/ToolCard';
 import { ToolPage } from './components/ToolPage';
@@ -27,41 +27,72 @@ function renderTool(id: string) {
   }
 }
 
-export default function App() {
-  const [activeTool, setActiveTool] = useState<ToolMeta | null>(null);
+function HomePage() {
+  const navigate = useNavigate();
 
   return (
+    <section className="tools-section">
+      <h2 className="tools-section__title">All Tools</h2>
+      <p className="tools-section__sub">{TOOLS.length} tools · No account needed · 100% in-browser</p>
+      <div className="tools-grid">
+        {TOOLS.map((tool) => (
+          <ToolCard
+            key={tool.id}
+            tool={tool}
+            onClick={() => tool.status === 'ready' && navigate(`/tools/${tool.id}`)}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ToolRoutePage() {
+  const { toolId } = useParams();
+  const navigate = useNavigate();
+  const tool = TOOLS.find((item) => item.id === toolId) as ToolMeta | undefined;
+
+  if (!tool || tool.status !== 'ready') {
+    return <Navigate to="/" replace />;
+  }
+
+  return (
+    <ToolPage tool={tool} onBack={() => navigate('/')}>
+      {renderTool(tool.id)}
+    </ToolPage>
+  );
+}
+
+function Header() {
+  const location = useLocation();
+  const atHome = location.pathname === '/';
+
+  return (
+    <header className="app-header">
+      <div className="app-header__inner">
+        <Link className="app-logo app-logo--btn" to="/">
+          <span className="app-logo__icon">🧰</span>
+          <span className="app-logo__name">BeginnersToolBox</span>
+        </Link>
+        <p className="app-tagline">
+          {atHome ? 'Simple, browser-based tools for everyday tasks.' : 'Tool page with shareable URL.'}
+        </p>
+      </div>
+    </header>
+  );
+}
+
+export default function App() {
+  return (
     <div className="app">
-      <header className="app-header">
-        <div className="app-header__inner">
-          <button className="app-logo app-logo--btn" onClick={() => setActiveTool(null)}>
-            <span className="app-logo__icon">🧰</span>
-            <span className="app-logo__name">BeginnersToolBox</span>
-          </button>
-          <p className="app-tagline">Simple, browser-based tools for everyday tasks.</p>
-        </div>
-      </header>
+      <Header />
 
       <main className="app-main">
-        {activeTool ? (
-          <ToolPage tool={activeTool} onBack={() => setActiveTool(null)}>
-            {renderTool(activeTool.id)}
-          </ToolPage>
-        ) : (
-          <section className="tools-section">
-            <h2 className="tools-section__title">All Tools</h2>
-            <p className="tools-section__sub">{TOOLS.length} tools · No account needed · 100% in-browser</p>
-            <div className="tools-grid">
-              {TOOLS.map((tool) => (
-                <ToolCard
-                  key={tool.id}
-                  tool={tool}
-                  onClick={() => tool.status === 'ready' && setActiveTool(tool)}
-                />
-              ))}
-            </div>
-          </section>
-        )}
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/tools/:toolId" element={<ToolRoutePage />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
 
       <footer className="app-footer">

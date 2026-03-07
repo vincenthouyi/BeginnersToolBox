@@ -25,6 +25,12 @@ A collection of simple, browser-based tools for everyday developer tasks — no 
 
 Click any tool card on the home page to open it. All processing happens locally in your browser — no data is sent to any server.
 
+Each tool also has a direct URL (hash route), for example:
+
+- `#/tools/base64`
+- `#/tools/json-formatter`
+- `#/tools/regex-tester`
+
 ### Tool highlights
 
 - **Base64** — encode or decode text with a single click; swap input/output instantly.
