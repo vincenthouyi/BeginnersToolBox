@@ -1,0 +1,5 @@
+/* Global resets — design tokens live in src/styles/design-system.css */
+body {
+  margin: 0;
+  min-width: 320px;
+}
