@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import '../tools.css';
 import './RegexTesterTool.css';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
@@ -7,11 +7,9 @@ export function RegexTesterTool() {
   const [pattern, setPattern] = useLocalStorage('regex:pattern', '(\\w+)\\s+(\\w+)');
   const [flags, setFlags] = useLocalStorage('regex:flags', 'g');
   const [testStr, setTestStr] = useLocalStorage('regex:testStr', 'Hello World\nFoo Bar\nBaz Qux');
-  const [error, setError] = useState('');
 
   const result = useMemo(() => {
     if (!pattern) return null;
-    setError('');
     try {
       const re = new RegExp(pattern, flags);
       const matches: Array<{ match: string; index: number; groups: string[] }> = [];
@@ -26,12 +24,13 @@ export function RegexTesterTool() {
         const m = re.exec(testStr);
         if (m) matches.push({ match: m[0], index: m.index, groups: Array.from(m).slice(1).map((g) => g ?? '') });
       }
-      return { matches, re };
+      return { matches, re, error: null };
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Invalid regex');
-      return null;
+      return { matches: [], re: null, error: e instanceof Error ? e.message : 'Invalid regex' };
     }
   }, [pattern, flags, testStr]);
+
+  const error = result?.error ?? null;
 
   // Build highlighted text
   const highlighted = useMemo(() => {
@@ -95,7 +94,7 @@ export function RegexTesterTool() {
             {result && result.matches.length > 0
               ? highlighted
               : <span style={{ color: 'var(--color-text-muted)' }}>
-                  {result ? 'No matches' : 'Enter a pattern above…'}
+                  {result && !result.error ? 'No matches' : 'Enter a pattern above…'}
                 </span>}
           </div>
         </div>
