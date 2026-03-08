@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import '../tools.css';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { encodeBase64, decodeBase64 } from '../../lib/base64';
 
 export function Base64Tool() {
   const [input, setInput] = useLocalStorage('base64:input', '');
@@ -11,7 +12,7 @@ export function Base64Tool() {
   function encode() {
     setError('');
     try {
-      setOutput(btoa(unescape(encodeURIComponent(input))));
+      setOutput(encodeBase64(input));
     } catch {
       setError('Encoding failed. Check your input.');
     }
@@ -20,7 +21,7 @@ export function Base64Tool() {
   function decode() {
     setError('');
     try {
-      setOutput(decodeURIComponent(escape(atob(input.trim()))));
+      setOutput(decodeBase64(input));
     } catch {
       setError('Invalid Base64 string. Check your input.');
     }
