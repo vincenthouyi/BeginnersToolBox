@@ -1,11 +1,12 @@
 import { useState, useMemo } from 'react';
 import '../tools.css';
 import './RegexTesterTool.css';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 export function RegexTesterTool() {
-  const [pattern, setPattern] = useState('(\\w+)\\s+(\\w+)');
-  const [flags, setFlags] = useState('g');
-  const [testStr, setTestStr] = useState('Hello World\nFoo Bar\nBaz Qux');
+  const [pattern, setPattern] = useLocalStorage('regex:pattern', '(\\w+)\\s+(\\w+)');
+  const [flags, setFlags] = useLocalStorage('regex:flags', 'g');
+  const [testStr, setTestStr] = useLocalStorage('regex:testStr', 'Hello World\nFoo Bar\nBaz Qux');
   const [error, setError] = useState('');
 
   const result = useMemo(() => {

@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import '../tools.css';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 export function UrlEncoderTool() {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useLocalStorage('url:input', '');
+  const [mode, setMode] = useLocalStorage<'component' | 'full'>('url:mode', 'component');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
-  const [mode, setMode] = useState<'component' | 'full'>('component');
 
   function encode() {
     setError('');

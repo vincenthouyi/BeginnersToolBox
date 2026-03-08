@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import '../tools.css';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 export function Base64Tool() {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useLocalStorage('base64:input', '');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
 
   function encode() {
     setError('');
@@ -30,6 +32,13 @@ export function Base64Tool() {
     setError('');
   }
 
+  function copyOutput() {
+    if (!output) return;
+    navigator.clipboard.writeText(output);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  }
+
   return (
     <div className="tool-layout">
       <div className="tool-row tool-row--split">
@@ -53,6 +62,7 @@ export function Base64Tool() {
         <button className="tool-btn tool-btn--primary" onClick={encode}>Encode → Base64</button>
         <button className="tool-btn tool-btn--primary" onClick={decode}>Decode ← Base64</button>
         <button className="tool-btn" onClick={swap} disabled={!output}>↕ Swap</button>
+        <button className="tool-btn" onClick={copyOutput} disabled={!output}>{copied ? 'Copied!' : 'Copy'}</button>
       </div>
 
       {error && <div className="tool-message tool-message--error">{error}</div>}

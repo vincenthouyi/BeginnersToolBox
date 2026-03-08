@@ -183,3 +183,11 @@
   color: var(--color-text);
   border-color: var(--color-accent);
 }
+
+/* JSON syntax highlighting */
+.json-key   { color: #7c6af7; } /* accent purple — object keys */
+.json-str   { color: #4ade80; } /* success green — string values */
+.json-num   { color: #60a5fa; } /* blue — numbers */
+.json-bool  { color: #fb923c; } /* orange — true / false */
+.json-null  { color: #f87171; } /* red — null */
+.json-punct { color: #888;    } /* muted — braces, brackets, commas */

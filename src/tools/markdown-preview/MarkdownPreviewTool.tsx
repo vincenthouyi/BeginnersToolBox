@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import '../tools.css';
 import './MarkdownPreviewTool.css';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 const SAMPLE = `# Hello, Markdown!
 
@@ -135,7 +136,7 @@ function parseMarkdown(md: string): string {
 }
 
 export function MarkdownPreviewTool() {
-  const [md, setMd] = useState(SAMPLE);
+  const [md, setMd] = useLocalStorage('markdown:md', SAMPLE);
   const html = useMemo(() => parseMarkdown(md), [md]);
 
   return (

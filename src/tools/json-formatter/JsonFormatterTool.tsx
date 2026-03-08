@@ -1,20 +1,76 @@
 import { useState } from 'react';
 import '../tools.css';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
+
+/**
+ * Tokenises already-validated (prettified) JSON and wraps tokens in
+ * <span> elements for syntax colouring.  HTML special chars are escaped
+ * so there is no XSS risk from the input.
+ */
+function highlightJson(json: string): string {
+  function esc(s: string) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  // Matches: quoted strings (optionally followed by a colon → key),
+  //          boolean literals, null, and numbers.
+  const re =
+    /"(?:\\u[a-fA-F0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?/g;
+
+  let result = '';
+  let last = 0;
+  let m: RegExpExecArray | null;
+
+  while ((m = re.exec(json)) !== null) {
+    if (m.index > last) {
+      result += `<span class="json-punct">${esc(json.slice(last, m.index))}</span>`;
+    }
+
+    const token = m[0];
+    const isKey = m[1] !== undefined; // group 1: optional trailing colon
+
+    let cls: string;
+    if (isKey) {
+      cls = 'json-key';
+    } else if (token[0] === '"') {
+      cls = 'json-str';
+    } else if (token === 'true' || token === 'false') {
+      cls = 'json-bool';
+    } else if (token === 'null') {
+      cls = 'json-null';
+    } else {
+      cls = 'json-num';
+    }
+
+    result += `<span class="${cls}">${esc(token)}</span>`;
+    last = m.index + token.length;
+  }
+
+  if (last < json.length) {
+    result += `<span class="json-punct">${esc(json.slice(last))}</span>`;
+  }
+
+  return result;
+}
 
 export function JsonFormatterTool() {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useLocalStorage('json:input', '');
+  const [indent, setIndent] = useLocalStorage<number>('json:indent', 2);
   const [output, setOutput] = useState('');
+  const [highlighted, setHighlighted] = useState('');
   const [error, setError] = useState('');
-  const [indent, setIndent] = useState(2);
 
   function prettify() {
     setError('');
     try {
       const parsed = JSON.parse(input);
-      setOutput(JSON.stringify(parsed, null, indent));
+      const formatted = JSON.stringify(parsed, null, indent);
+      setOutput(formatted);
+      setHighlighted(highlightJson(formatted));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Invalid JSON');
       setOutput('');
+      setHighlighted('');
     }
   }
 
@@ -22,10 +78,13 @@ export function JsonFormatterTool() {
     setError('');
     try {
       const parsed = JSON.parse(input);
-      setOutput(JSON.stringify(parsed));
+      const formatted = JSON.stringify(parsed);
+      setOutput(formatted);
+      setHighlighted(highlightJson(formatted));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Invalid JSON');
       setOutput('');
+      setHighlighted('');
     }
   }
 
@@ -41,7 +100,7 @@ export function JsonFormatterTool() {
           <textarea
             className="tool-textarea"
             value={input}
-            onChange={(e) => { setInput(e.target.value); setError(''); setOutput(''); }}
+            onChange={(e) => { setInput(e.target.value); setError(''); setOutput(''); setHighlighted(''); }}
             placeholder={'{\n  "key": "value"\n}'}
             spellCheck={false}
           />
@@ -49,8 +108,8 @@ export function JsonFormatterTool() {
         <div className="tool-panel">
           <label className="tool-label">Output</label>
           <div className="tool-output" style={{ minHeight: 180 }}>
-            {output
-              ? output
+            {highlighted
+              ? <span dangerouslySetInnerHTML={{ __html: highlighted }} />
               : <span style={{ color: 'var(--color-text-muted)' }}>Formatted JSON will appear here…</span>}
           </div>
         </div>
