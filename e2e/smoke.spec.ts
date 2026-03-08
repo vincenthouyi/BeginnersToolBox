@@ -21,9 +21,9 @@ test('home page loads and shows tool cards', async ({ page }) => {
 
 for (const id of TOOL_IDS) {
   test(`tool page loads: /tools/${id}`, async ({ page }) => {
-    await page.goto(`/tools/${id}`);
-    // Should not redirect back to home (tool exists)
-    await expect(page).not.toHaveURL('/');
+    // App uses HashRouter, so tool routes are under /#/tools/:id
+    await page.goto(`/#/tools/${id}`);
+
     // The tool layout should render
     await expect(page.locator('.tool-layout')).toBeVisible();
   });
