@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import '../tools.css';
 import './TimestampConverterTool.css';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 function formatDate(d: Date): string {
   return d.toISOString().replace('T', ' ').replace('Z', ' UTC');
@@ -11,8 +12,8 @@ function formatLocal(d: Date): string {
 }
 
 export function TimestampConverterTool() {
-  const [tsInput, setTsInput] = useState('');
-  const [dateInput, setDateInput] = useState('');
+  const [tsInput, setTsInput] = useLocalStorage('ts:tsInput', '');
+  const [dateInput, setDateInput] = useLocalStorage('ts:dateInput', '');
   const [tsResult, setTsResult] = useState<{ unix: number; utc: string; local: string } | null>(null);
   const [dateResult, setDateResult] = useState<{ unix: number; utc: string; local: string } | null>(null);
   const [tsError, setTsError] = useState('');

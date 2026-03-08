@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import '../tools.css';
 import './HashGeneratorTool.css';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 type Algorithm = 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
 const ALGORITHMS: Algorithm[] = ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'];
@@ -20,9 +21,10 @@ interface HashResult {
 }
 
 export function HashGeneratorTool() {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useLocalStorage('hash:input', '');
+  const [selectedArr, setSelectedArr] = useLocalStorage<Algorithm[]>('hash:selected', ALGORITHMS);
+  const selected = new Set(selectedArr);
   const [results, setResults] = useState<HashResult[]>([]);
-  const [selected, setSelected] = useState<Set<Algorithm>>(new Set(ALGORITHMS));
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
 
@@ -36,11 +38,11 @@ export function HashGeneratorTool() {
   }
 
   function toggleAlgo(algo: Algorithm) {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(algo)) { if (next.size > 1) next.delete(algo); }
-      else next.add(algo);
-      return next;
+    setSelectedArr((prev) => {
+      const set = new Set(prev);
+      if (set.has(algo)) { if (set.size > 1) set.delete(algo); }
+      else set.add(algo);
+      return ALGORITHMS.filter((a) => set.has(a));
     });
   }
 

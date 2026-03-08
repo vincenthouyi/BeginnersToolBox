@@ -7,6 +7,7 @@ export function UrlEncoderTool() {
   const [mode, setMode] = useLocalStorage<'component' | 'full'>('url:mode', 'component');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
 
   function encode() {
     setError('');
@@ -71,7 +72,7 @@ export function UrlEncoderTool() {
         <button className="tool-btn tool-btn--primary" onClick={encode}>Encode →</button>
         <button className="tool-btn tool-btn--primary" onClick={decode}>← Decode</button>
         <button className="tool-btn" onClick={swap} disabled={!output}>↕ Swap</button>
-        <button className="tool-btn" onClick={() => output && navigator.clipboard.writeText(output)} disabled={!output}>Copy</button>
+        <button className="tool-btn" onClick={() => { if (output) { navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); } }} disabled={!output}>{copied ? 'Copied!' : 'Copy'}</button>
       </div>
 
       {error && <div className="tool-message tool-message--error">{error}</div>}

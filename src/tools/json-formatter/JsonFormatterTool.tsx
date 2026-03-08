@@ -59,6 +59,7 @@ export function JsonFormatterTool() {
   const [output, setOutput] = useState('');
   const [highlighted, setHighlighted] = useState('');
   const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
 
   function prettify() {
     setError('');
@@ -89,7 +90,10 @@ export function JsonFormatterTool() {
   }
 
   function copyOutput() {
-    if (output) navigator.clipboard.writeText(output);
+    if (!output) return;
+    navigator.clipboard.writeText(output);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   }
 
   return (
@@ -126,7 +130,7 @@ export function JsonFormatterTool() {
             <option value={1}>1 space</option>
           </select>
         </label>
-        <button className="tool-btn" onClick={copyOutput} disabled={!output}>Copy</button>
+        <button className="tool-btn" onClick={copyOutput} disabled={!output}>{copied ? 'Copied!' : 'Copy'}</button>
       </div>
 
       {error && <div className="tool-message tool-message--error">{error}</div>}
