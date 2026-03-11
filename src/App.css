@@ -15,11 +15,40 @@
   margin: 0 auto;
 }
 
+.app-header__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-2);
+}
+
+.app-nav {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.app-nav__link {
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  text-decoration: none;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+}
+
+.app-nav__link:hover {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+}
+
 .app-logo {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  margin-bottom: var(--space-2);
+  margin-bottom: 0;
 }
 
 .app-logo--btn {

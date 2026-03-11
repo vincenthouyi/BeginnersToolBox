@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import '../tools.css';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { sortJsonKeysDeep } from '../../lib/json';
 
 /**
  * Tokenises already-validated (prettified) JSON and wraps tokens in
@@ -59,13 +60,15 @@ export function JsonFormatterTool() {
   const [output, setOutput] = useState('');
   const [highlighted, setHighlighted] = useState('');
   const [error, setError] = useState('');
+  const [sortKeys, setSortKeys] = useLocalStorage<boolean>('json:sortKeys', false);
   const [copied, setCopied] = useState(false);
 
   function prettify() {
     setError('');
     try {
       const parsed = JSON.parse(input);
-      const formatted = JSON.stringify(parsed, null, indent);
+      const normalized = sortKeys ? sortJsonKeysDeep(parsed) : parsed;
+      const formatted = JSON.stringify(normalized, null, indent);
       setOutput(formatted);
       setHighlighted(highlightJson(formatted));
     } catch (e) {
@@ -79,7 +82,8 @@ export function JsonFormatterTool() {
     setError('');
     try {
       const parsed = JSON.parse(input);
-      const formatted = JSON.stringify(parsed);
+      const normalized = sortKeys ? sortJsonKeysDeep(parsed) : parsed;
+      const formatted = JSON.stringify(normalized);
       setOutput(formatted);
       setHighlighted(highlightJson(formatted));
     } catch (e) {
@@ -129,6 +133,14 @@ export function JsonFormatterTool() {
             <option value={4}>4 spaces</option>
             <option value={1}>1 space</option>
           </select>
+        </label>
+        <label className="tool-label" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <input
+            type="checkbox"
+            checked={sortKeys}
+            onChange={(e) => setSortKeys(e.target.checked)}
+          />
+          Sort keys (recursive)
         </label>
         <button className="tool-btn" onClick={copyOutput} disabled={!output}>{copied ? 'Copied!' : 'Copy'}</button>
       </div>

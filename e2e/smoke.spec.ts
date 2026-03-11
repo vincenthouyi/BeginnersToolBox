@@ -19,6 +19,12 @@ test('home page loads and shows tool cards', async ({ page }) => {
   await expect(cards.first()).toBeVisible();
 });
 
+test('data formats page loads: /data-formats', async ({ page }) => {
+  await page.goto('/#/data-formats');
+  await expect(page.getByRole('heading', { name: 'Data Formats' })).toBeVisible();
+  await expect(page.locator('.tool-card')).toBeVisible();
+});
+
 for (const id of TOOL_IDS) {
   test(`tool page loads: /tools/${id}`, async ({ page }) => {
     // App uses HashRouter, so tool routes are under /#/tools/:id

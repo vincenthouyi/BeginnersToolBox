@@ -47,6 +47,28 @@ function HomePage() {
   );
 }
 
+function DataFormatsPage() {
+  const navigate = useNavigate();
+  const dataFormatToolIds = ['json-formatter'];
+  const dataFormatTools = TOOLS.filter((tool) => dataFormatToolIds.includes(tool.id));
+
+  return (
+    <section className="tools-section">
+      <h2 className="tools-section__title">Data Formats</h2>
+      <p className="tools-section__sub">JSON, YAML, CSV, and more (in-browser).</p>
+      <div className="tools-grid">
+        {dataFormatTools.map((tool) => (
+          <ToolCard
+            key={tool.id}
+            tool={tool}
+            onClick={() => tool.status === 'ready' && navigate(`/tools/${tool.id}`)}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ToolRoutePage() {
   const { toolId } = useParams();
   const navigate = useNavigate();
@@ -70,10 +92,17 @@ function Header() {
   return (
     <header className="app-header">
       <div className="app-header__inner">
-        <Link className="app-logo app-logo--btn" to="/">
-          <span className="app-logo__icon">🧰</span>
-          <span className="app-logo__name">BeginnersToolBox</span>
-        </Link>
+        <div className="app-header__top">
+          <Link className="app-logo app-logo--btn" to="/">
+            <span className="app-logo__icon">🧰</span>
+            <span className="app-logo__name">BeginnersToolBox</span>
+          </Link>
+
+          <nav className="app-nav" aria-label="Primary">
+            <Link className="app-nav__link" to="/data-formats">Data Formats</Link>
+          </nav>
+        </div>
+
         <p className="app-tagline">
           {atHome ? 'Simple, browser-based tools for everyday tasks.' : 'Tool page with shareable URL.'}
         </p>
@@ -90,6 +119,7 @@ export default function App() {
       <main className="app-main">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/data-formats" element={<DataFormatsPage />} />
           <Route path="/tools/:toolId" element={<ToolRoutePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
