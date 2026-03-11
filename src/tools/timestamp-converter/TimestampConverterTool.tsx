@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import '../tools.css';
 import './TimestampConverterTool.css';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { getEnumSearchParam, getShortSearchParam } from '../../lib/urlParams';
 
 function formatDate(d: Date): string {
   return d.toISOString().replace('T', ' ').replace('Z', ' UTC');
@@ -12,6 +14,7 @@ function formatLocal(d: Date): string {
 }
 
 export function TimestampConverterTool() {
+  const [searchParams] = useSearchParams();
   const [tsInput, setTsInput] = useLocalStorage('ts:tsInput', '');
   const [dateInput, setDateInput] = useLocalStorage('ts:dateInput', '');
   const [tsResult, setTsResult] = useState<{ unix: number; utc: string; local: string } | null>(null);
@@ -19,9 +22,10 @@ export function TimestampConverterTool() {
   const [tsError, setTsError] = useState('');
   const [dateError, setDateError] = useState('');
 
-  function convertTimestamp() {
+  function convertTimestamp(override?: string) {
+    const activeInput = override ?? tsInput;
     setTsError('');
-    const raw = tsInput.trim();
+    const raw = activeInput.trim();
     if (!raw) { setTsError('Enter a timestamp'); return; }
     let num = parseInt(raw, 10);
     if (isNaN(num)) { setTsError('Not a valid number'); return; }
@@ -32,6 +36,47 @@ export function TimestampConverterTool() {
     if (isNaN(d.getTime())) { setTsError('Invalid timestamp'); return; }
     setTsResult({ unix: num / 1000, utc: formatDate(d), local: formatLocal(d) });
   }
+
+  useEffect(() => {
+    const nextTs = getShortSearchParam(searchParams, 'ts');
+    const nextUnit = getEnumSearchParam(searchParams, 'unit', ['s', 'ms'] as const);
+
+    if (nextTs !== null) {
+      const normalized = nextTs;
+
+      // If unit=ms and input looks like seconds, convert to ms for consistency.
+      if (nextUnit === 'ms' && normalized.length < 13) {
+        const parsed = parseInt(normalized, 10);
+        if (!isNaN(parsed)) {
+          const ms = String(parsed * 1000);
+          setTsInput(ms);
+          setTsResult(null);
+          setTsError('');
+          convertTimestamp(ms);
+          return;
+        }
+      }
+
+      // If unit=s and input looks like ms, convert to seconds.
+      if (nextUnit === 's' && normalized.length >= 13) {
+        const parsed = parseInt(normalized, 10);
+        if (!isNaN(parsed)) {
+          const s = String(Math.floor(parsed / 1000));
+          setTsInput(s);
+          setTsResult(null);
+          setTsError('');
+          convertTimestamp(s);
+          return;
+        }
+      }
+
+      setTsInput(normalized);
+      setTsResult(null);
+      setTsError('');
+      convertTimestamp(normalized);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   function convertDate() {
     setDateError('');
@@ -66,7 +111,7 @@ export function TimestampConverterTool() {
             onKeyDown={(e) => e.key === 'Enter' && convertTimestamp()}
             placeholder="e.g. 1700000000 or 1700000000000"
           />
-          <button className="tool-btn tool-btn--primary" onClick={convertTimestamp}>Convert</button>
+          <button className="tool-btn tool-btn--primary" onClick={() => convertTimestamp()}>Convert</button>
           <button className="tool-btn" onClick={useNow}>Now</button>
         </div>
         {tsError && <div className="tool-message tool-message--error">{tsError}</div>}

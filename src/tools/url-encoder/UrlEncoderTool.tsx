@@ -1,13 +1,51 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import '../tools.css';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { getEnumSearchParam, getShortSearchParam } from '../../lib/urlParams';
 
 export function UrlEncoderTool() {
+  const [searchParams] = useSearchParams();
   const [input, setInput] = useLocalStorage('url:input', '');
   const [mode, setMode] = useLocalStorage<'component' | 'full'>('url:mode', 'component');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const nextText = getShortSearchParam(searchParams, 'text');
+    const nextScope = getEnumSearchParam(searchParams, 'scope', ['component', 'full'] as const);
+    const nextOp = getEnumSearchParam(searchParams, 'op', ['encode', 'decode'] as const);
+
+    if (nextText !== null) {
+      setInput(nextText);
+      setOutput('');
+      setError('');
+    }
+
+    if (nextScope) {
+      setMode(nextScope);
+    }
+
+    if (nextText !== null && nextOp) {
+      // Auto-run conversion when both are provided.
+      if (nextOp === 'encode') {
+        try {
+          setOutput(nextScope === 'full' ? encodeURI(nextText) : encodeURIComponent(nextText));
+        } catch (e) {
+          setError(e instanceof Error ? e.message : 'Encoding failed');
+        }
+      } else {
+        try {
+          setOutput(nextScope === 'full' ? decodeURI(nextText) : decodeURIComponent(nextText));
+        } catch {
+          setError('Invalid URL-encoded string. Check your input.');
+        }
+      }
+    }
+    // Intentionally only reacts to URL changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   function encode() {
     setError('');
