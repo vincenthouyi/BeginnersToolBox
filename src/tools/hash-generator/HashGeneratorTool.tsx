@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import '../tools.css';
 import './HashGeneratorTool.css';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { getEnumSearchParam } from '../../lib/urlParams';
 
 type Algorithm = 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
 const ALGORITHMS: Algorithm[] = ['SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'];
@@ -21,12 +23,24 @@ interface HashResult {
 }
 
 export function HashGeneratorTool() {
+  const [searchParams] = useSearchParams();
   const [input, setInput] = useLocalStorage('hash:input', '');
   const [selectedArr, setSelectedArr] = useLocalStorage<Algorithm[]>('hash:selected', ALGORITHMS);
   const selected = new Set(selectedArr);
   const [results, setResults] = useState<HashResult[]>([]);
+
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
+
+  useEffect(() => {
+    const nextAlg = getEnumSearchParam(searchParams, 'alg', ALGORITHMS);
+    if (nextAlg !== null) {
+      setSelectedArr([nextAlg]);
+      setResults([]);
+    }
+    // Intentionally only reacts to URL changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   async function generate() {
     if (!input) return;
