@@ -9,6 +9,7 @@ const TOOL_IDS = [
   'regex-tester',
   'timestamp-converter',
   'hash-generator',
+  'data-converter',
 ];
 
 test('home page loads and shows tool cards', async ({ page }) => {
@@ -22,7 +23,7 @@ test('home page loads and shows tool cards', async ({ page }) => {
 test('data formats page loads: /data-formats', async ({ page }) => {
   await page.goto('/#/data-formats');
   await expect(page.getByRole('heading', { name: 'Data Formats' })).toBeVisible();
-  await expect(page.locator('.tool-card')).toBeVisible();
+  await expect(page.locator('.tool-card').first()).toBeVisible();
 });
 
 test('url encoder supports short URL input via query params', async ({ page }) => {
@@ -34,6 +35,17 @@ test('url encoder supports short URL input via query params', async ({ page }) =
 test('timestamp converter supports short URL input via query params', async ({ page }) => {
   await page.goto('/#/tools/timestamp-converter?ts=1700000000&unit=s');
   await expect(page.locator('input.tool-input').first()).toHaveValue('1700000000');
+});
+
+test('color converter loads color from URL param', async ({ page }) => {
+  await page.goto('/#/tools/color-converter?color=ff0000&format=hex');
+  await expect(page.locator('.color-hex-display')).toContainText('#FF0000');
+});
+
+test('hash generator selects algorithm from URL param', async ({ page }) => {
+  await page.goto('/#/tools/hash-generator?alg=SHA-512');
+  await expect(page.locator('.hash-algo-btn--active')).toHaveCount(1);
+  await expect(page.locator('.hash-algo-btn--active')).toContainText('SHA-512');
 });
 
 for (const id of TOOL_IDS) {

@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import '../tools.css';
 import './ColorConverterTool.css';
 import { hexToRgb, rgbToHex, rgbToHsl, hslToRgb } from '../../lib/color';
+import { getEnumSearchParam, getShortSearchParam } from '../../lib/urlParams';
 
 interface ColorState {
   hex: string;
@@ -17,11 +19,24 @@ function fromHex(hex: string): ColorState | null {
   return { hex: hex.toLowerCase(), r, g, b, h, s, l };
 }
 
+function initialColorFromParams(searchParams: URLSearchParams): ColorState {
+  // format param is accepted but all formats are always displayed
+  getEnumSearchParam(searchParams, 'format', ['hex', 'rgb', 'hsl'] as const);
+  const nextColor = getShortSearchParam(searchParams, 'color');
+  if (nextColor !== null) {
+    const val = nextColor.startsWith('#') ? nextColor : '#' + nextColor;
+    const c = fromHex(val);
+    if (c) return c;
+  }
+  return fromHex('#7c6af7')!;
+}
+
 export function ColorConverterTool() {
-  const [color, setColor] = useState<ColorState>(fromHex('#7c6af7')!);
-  const [hexInput, setHexInput] = useState('#7c6af7');
-  const [rgbInput, setRgbInput] = useState({ r: '124', g: '106', b: '247' });
-  const [hslInput, setHslInput] = useState({ h: '248', s: '89', l: '69' });
+  const [searchParams] = useSearchParams();
+  const [color, setColor] = useState<ColorState>(() => initialColorFromParams(searchParams));
+  const [hexInput, setHexInput] = useState(color.hex);
+  const [rgbInput, setRgbInput] = useState({ r: String(color.r), g: String(color.g), b: String(color.b) });
+  const [hslInput, setHslInput] = useState({ h: String(color.h), s: String(color.s), l: String(color.l) });
   const [error, setError] = useState('');
 
   function applyHex(raw: string) {

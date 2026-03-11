@@ -79,6 +79,14 @@ export const TOOLS: ToolMeta[] = [
     category: 'data',
     status: 'ready',
   },
+  {
+    id: 'data-converter',
+    name: 'Data Converter',
+    description: 'Convert between JSON, YAML, and CSV formats in the browser.',
+    icon: '🔄',
+    category: 'data',
+    status: 'ready',
+  },
 ];
 
 export const getToolById = (id: string): ToolMeta | undefined =>

@@ -12,6 +12,7 @@ import { UrlEncoderTool } from './tools/url-encoder/UrlEncoderTool';
 import { RegexTesterTool } from './tools/regex-tester/RegexTesterTool';
 import { TimestampConverterTool } from './tools/timestamp-converter/TimestampConverterTool';
 import { HashGeneratorTool } from './tools/hash-generator/HashGeneratorTool';
+import { DataConverterTool } from './tools/data-converter/DataConverterTool';
 
 function renderTool(id: string) {
   switch (id) {
@@ -23,6 +24,7 @@ function renderTool(id: string) {
     case 'regex-tester': return <RegexTesterTool />;
     case 'timestamp-converter': return <TimestampConverterTool />;
     case 'hash-generator': return <HashGeneratorTool />;
+    case 'data-converter': return <DataConverterTool />;
     default: return <p>Tool not found.</p>;
   }
 }
@@ -49,7 +51,7 @@ function HomePage() {
 
 function DataFormatsPage() {
   const navigate = useNavigate();
-  const dataFormatToolIds = ['json-formatter'];
+  const dataFormatToolIds = ['json-formatter', 'data-converter'];
   const dataFormatTools = TOOLS.filter((tool) => dataFormatToolIds.includes(tool.id));
 
   return (
