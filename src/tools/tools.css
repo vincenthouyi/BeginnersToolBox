@@ -105,6 +105,11 @@
   border-color: var(--color-accent-hover);
 }
 
+.tool-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .tool-input {
   flex: 1;
   min-width: 0;
@@ -166,6 +171,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  flex-wrap: wrap;
 }
 
 .tool-copy-btn {

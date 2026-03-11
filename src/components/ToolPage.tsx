@@ -21,6 +21,7 @@ export function ToolPage({ tool, onBack, children }: Props) {
         <p className="tool-page__desc">{tool.description}</p>
       </div>
       <div className="tool-page__body">{children}</div>
+      <p className="tool-page__hint">Inputs are saved in your browser.</p>
     </div>
   );
 }

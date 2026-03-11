@@ -73,8 +73,6 @@ export function JsonFormatterTool() {
       setHighlighted(highlightJson(formatted));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Invalid JSON');
-      setOutput('');
-      setHighlighted('');
     }
   }
 
@@ -88,8 +86,6 @@ export function JsonFormatterTool() {
       setHighlighted(highlightJson(formatted));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Invalid JSON');
-      setOutput('');
-      setHighlighted('');
     }
   }
 
@@ -108,7 +104,7 @@ export function JsonFormatterTool() {
           <textarea
             className="tool-textarea"
             value={input}
-            onChange={(e) => { setInput(e.target.value); setError(''); setOutput(''); setHighlighted(''); }}
+            onChange={(e) => { setInput(e.target.value); setError(''); }}
             placeholder={'{\n  "key": "value"\n}'}
             spellCheck={false}
           />
