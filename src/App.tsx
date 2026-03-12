@@ -209,8 +209,9 @@ function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const hamburgerRef = useRef<HTMLDivElement>(null);
 
-  // Close menu on route change
+  // Close menu on route change.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMenuOpen(false);
   }, [location.pathname]);
 
