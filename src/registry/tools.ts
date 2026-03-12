@@ -10,7 +10,7 @@ export interface ToolMeta {
   name: string;
   description: string;
   icon: string;
-  category: 'text' | 'data' | 'color' | 'math' | 'web' | 'misc';
+  category: 'text' | 'data' | 'color' | 'math' | 'web' | 'misc' | 'music';
   status: 'planned' | 'wip' | 'ready';
 }
 
@@ -101,6 +101,22 @@ export const TOOLS: ToolMeta[] = [
     description: 'Generate RFC-4122 UUIDs or sortable ULIDs in bulk.',
     icon: '🪪',
     category: 'misc',
+    status: 'ready',
+  },
+  {
+    id: 'metronome',
+    name: 'Metronome',
+    description: 'Keep time with a browser-based metronome. Tap tempo, accent beat 1, adjust BPM and volume.',
+    icon: '🎵',
+    category: 'music',
+    status: 'ready',
+  },
+  {
+    id: 'music-box-designer',
+    name: 'Music Box Designer',
+    description: 'Toggle notes on a step-sequencer grid and play back your melody in the browser.',
+    icon: '🎼',
+    category: 'music',
     status: 'ready',
   },
 ];

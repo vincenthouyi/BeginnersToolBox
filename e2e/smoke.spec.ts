@@ -12,6 +12,8 @@ const TOOL_IDS = [
   'data-converter',
   'json-diff',
   'uuid-generator',
+  'metronome',
+  'music-box-designer',
 ];
 
 test('home page loads and shows tool cards', async ({ page }) => {
@@ -90,6 +92,27 @@ test('json diff shows no differences for identical JSON', async ({ page }) => {
 test('data formats page shows json-diff card', async ({ page }) => {
   await page.goto('/#/data-formats');
   await expect(page.getByText('JSON Diff')).toBeVisible();
+});
+
+test('music page loads: /music', async ({ page }) => {
+  await page.goto('/#/music');
+  await expect(page.getByRole('heading', { name: 'Music', exact: true })).toBeVisible();
+  await expect(page.locator('.tool-card').first()).toBeVisible();
+});
+
+test('metronome renders beat dots and controls', async ({ page }) => {
+  await page.goto('/#/tools/metronome');
+  await expect(page.locator('.tool-layout')).toBeVisible();
+  await expect(page.locator('.metro-display')).toBeVisible();
+  await expect(page.locator('.metro-beat-dot').first()).toBeVisible();
+});
+
+test('music box designer renders step grid', async ({ page }) => {
+  await page.goto('/#/tools/music-box-designer');
+  await expect(page.locator('.tool-layout')).toBeVisible();
+  await expect(page.locator('.mbox-grid')).toBeVisible();
+  // Should have note cells
+  await expect(page.locator('.mbox-cell--note').first()).toBeVisible();
 });
 
 for (const id of TOOL_IDS) {

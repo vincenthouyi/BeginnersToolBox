@@ -15,6 +15,8 @@ import { HashGeneratorTool } from './tools/hash-generator/HashGeneratorTool';
 import { DataConverterTool } from './tools/data-converter/DataConverterTool';
 import { JsonDiffTool } from './tools/json-diff/JsonDiffTool';
 import { UuidGeneratorTool } from './tools/uuid-generator/UuidGeneratorTool';
+import { MetronomeTool } from './tools/metronome/MetronomeTool';
+import { MusicBoxDesignerTool } from './tools/music-box-designer/MusicBoxDesignerTool';
 
 function renderTool(id: string) {
   switch (id) {
@@ -29,6 +31,8 @@ function renderTool(id: string) {
     case 'data-converter': return <DataConverterTool />;
     case 'json-diff': return <JsonDiffTool />;
     case 'uuid-generator': return <UuidGeneratorTool />;
+    case 'metronome': return <MetronomeTool />;
+    case 'music-box-designer': return <MusicBoxDesignerTool />;
     default: return <p>Tool not found.</p>;
   }
 }
@@ -75,6 +79,27 @@ function DataFormatsPage() {
   );
 }
 
+function MusicPage() {
+  const navigate = useNavigate();
+  const musicTools = TOOLS.filter((tool) => tool.category === 'music');
+
+  return (
+    <section className="tools-section">
+      <h2 className="tools-section__title">Music</h2>
+      <p className="tools-section__sub">Browser-based music tools — no plugins needed.</p>
+      <div className="tools-grid">
+        {musicTools.map((tool) => (
+          <ToolCard
+            key={tool.id}
+            tool={tool}
+            onClick={() => tool.status === 'ready' && navigate(`/tools/${tool.id}`)}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function ToolRoutePage() {
   const { toolId } = useParams();
   const navigate = useNavigate();
@@ -106,6 +131,7 @@ function Header() {
 
           <nav className="app-nav" aria-label="Primary">
             <Link className="app-nav__link" to="/data-formats">Data Formats</Link>
+            <Link className="app-nav__link" to="/music">Music</Link>
           </nav>
         </div>
 
@@ -126,6 +152,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/data-formats" element={<DataFormatsPage />} />
+          <Route path="/music" element={<MusicPage />} />
           <Route path="/tools/:toolId" element={<ToolRoutePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
