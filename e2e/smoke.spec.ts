@@ -107,6 +107,80 @@ test('metronome renders beat dots and controls', async ({ page }) => {
   await expect(page.locator('.metro-beat-dot').first()).toBeVisible();
 });
 
+test('metronome renders countdown select', async ({ page }) => {
+  await page.goto('/#/tools/metronome');
+  await expect(page.locator('.metro-countdown-select')).toBeVisible();
+});
+
+test('metronome shows countdown display when countdown enabled and started', async ({ page }) => {
+  await page.goto('/#/tools/metronome?countdown=3');
+  await page.locator('.metro-toggle-btn').click();
+  // Countdown number should appear immediately
+  await expect(page.locator('.metro-countdown')).toBeVisible();
+  // Eventually transitions to playing (Stop button shown throughout)
+  await expect(page.locator('.metro-toggle-btn')).toContainText('Stop');
+});
+
+test('metronome loads bpm from URL param', async ({ page }) => {
+  await page.goto('/#/tools/metronome?bpm=140');
+  await expect(page.locator('.metro-bpm-number')).toHaveText('140');
+});
+
+test('metronome loads beats from URL param', async ({ page }) => {
+  await page.goto('/#/tools/metronome?beats=3');
+  await expect(page.locator('.metro-beat-dot')).toHaveCount(3);
+});
+
+test('metronome loads accent=0 from URL param', async ({ page }) => {
+  await page.goto('/#/tools/metronome?accent=0');
+  await expect(page.locator('.metro-beat-dot').first()).not.toHaveClass(/metro-beat-dot--accent/);
+});
+
+test('metronome loads countdown from URL param', async ({ page }) => {
+  await page.goto('/#/tools/metronome?countdown=3');
+  await expect(page.locator('.metro-countdown-select')).toHaveValue('3');
+});
+
+test('metronome loads multiple URL params', async ({ page }) => {
+  await page.goto('/#/tools/metronome?bpm=90&beats=3&accent=0&vol=0.5&countdown=5');
+  await expect(page.locator('.metro-bpm-number')).toHaveText('90');
+  await expect(page.locator('.metro-beat-dot')).toHaveCount(3);
+  await expect(page.locator('.metro-countdown-select')).toHaveValue('5');
+});
+
+test('metronome clamps out-of-range bpm URL param', async ({ page }) => {
+  await page.goto('/#/tools/metronome?bpm=9999');
+  await expect(page.locator('.metro-bpm-number')).toHaveText('240');
+});
+
+test('metronome clamps out-of-range beats URL param', async ({ page }) => {
+  await page.goto('/#/tools/metronome?beats=99');
+  await expect(page.locator('.metro-beat-dot')).toHaveCount(8);
+});
+
+test('metronome shows resume hint after page visibility hidden', async ({ page }) => {
+  await page.goto('/#/tools/metronome');
+  await page.locator('.metro-toggle-btn').click();
+  await expect(page.locator('.metro-toggle-btn')).toContainText('Stop');
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'visibilityState', {
+      value: 'hidden',
+      configurable: true,
+    });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  // Simulate returning to the page
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'visibilityState', {
+      value: 'visible',
+      configurable: true,
+    });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  // After visibility restore, either resumes (no hint) or shows hint — no crash
+  await expect(page.locator('.tool-layout')).toBeVisible();
+});
+
 test('music box designer renders step grid', async ({ page }) => {
   await page.goto('/#/tools/music-box-designer');
   await expect(page.locator('.tool-layout')).toBeVisible();

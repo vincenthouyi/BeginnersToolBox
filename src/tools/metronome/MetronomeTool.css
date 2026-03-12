@@ -71,3 +71,22 @@
   height: 16px;
   cursor: pointer;
 }
+
+.metro-countdown {
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.metro-resume-hint {
+  background: var(--color-accent);
+  color: #fff;
+  text-align: center;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
