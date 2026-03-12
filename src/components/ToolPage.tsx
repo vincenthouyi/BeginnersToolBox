@@ -1,4 +1,5 @@
 import type { ToolMeta } from '../registry/tools';
+import { clearTool, getToolKeys } from '../lib/localStorageAdmin';
 import './ToolPage.css';
 
 interface Props {
@@ -8,6 +9,15 @@ interface Props {
 }
 
 export function ToolPage({ tool, onBack, children }: Props) {
+  const hasSavedData = getToolKeys(tool.id).length > 0;
+
+  function handleReset() {
+    if (window.confirm(`Reset "${tool.name}"? Saved inputs and settings will be cleared.`)) {
+      clearTool(tool.id);
+      window.location.reload();
+    }
+  }
+
   return (
     <div className="tool-page">
       <div className="tool-page__header">
@@ -21,7 +31,14 @@ export function ToolPage({ tool, onBack, children }: Props) {
         <p className="tool-page__desc">{tool.description}</p>
       </div>
       <div className="tool-page__body">{children}</div>
-      <p className="tool-page__hint">Inputs are saved in your browser.</p>
+      <div className="tool-page__footer">
+        <p className="tool-page__hint">Inputs are saved in your browser.</p>
+        {hasSavedData && (
+          <button className="tool-page__reset" onClick={handleReset}>
+            Reset this tool
+          </button>
+        )}
+      </div>
     </div>
   );
 }

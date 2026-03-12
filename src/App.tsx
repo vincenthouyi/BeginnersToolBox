@@ -17,6 +17,7 @@ import { JsonDiffTool } from './tools/json-diff/JsonDiffTool';
 import { UuidGeneratorTool } from './tools/uuid-generator/UuidGeneratorTool';
 import { MetronomeTool } from './tools/metronome/MetronomeTool';
 import { MusicBoxDesignerTool } from './tools/music-box-designer/MusicBoxDesignerTool';
+import { SettingsPage } from './tools/settings/SettingsPage';
 
 function renderTool(id: string) {
   switch (id) {
@@ -132,6 +133,7 @@ function Header() {
           <nav className="app-nav" aria-label="Primary">
             <Link className="app-nav__link" to="/data-formats">Data Formats</Link>
             <Link className="app-nav__link" to="/music">Music</Link>
+            <Link className="app-nav__link" to="/settings">Settings</Link>
           </nav>
         </div>
 
@@ -153,6 +155,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/data-formats" element={<DataFormatsPage />} />
           <Route path="/music" element={<MusicPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="/tools/:toolId" element={<ToolRoutePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

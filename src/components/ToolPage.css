@@ -55,10 +55,32 @@
   gap: var(--space-6);
 }
 
+.tool-page__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
 .tool-page__hint {
   font-size: var(--text-xs);
   color: var(--color-text-muted);
   opacity: 0.7;
+}
+
+.tool-page__reset {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color var(--transition-fast);
+}
+
+.tool-page__reset:hover {
+  color: var(--color-error);
 }
 
 @media (max-width: 420px) {

@@ -1,0 +1,118 @@
+.settings-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-10);
+}
+
+.settings-page__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.settings-page__back {
+  align-self: flex-start;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color var(--transition-fast);
+  margin-bottom: var(--space-2);
+}
+
+.settings-page__back:hover {
+  color: var(--color-accent);
+}
+
+.settings-page__title {
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.settings-page__desc {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.settings-section__heading {
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.settings-section__note {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  max-width: 52ch;
+}
+
+.settings-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+  align-self: flex-start;
+}
+
+.settings-btn:hover {
+  background: var(--color-border);
+}
+
+.settings-btn--danger {
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.settings-btn--danger:hover {
+  background: color-mix(in srgb, var(--color-error) 12%, transparent);
+}
+
+.settings-btn--sm {
+  font-size: var(--text-xs);
+  padding: var(--space-1) var(--space-3);
+  flex-shrink: 0;
+}
+
+.settings-tool-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.settings-tool-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.settings-tool-item__icon {
+  font-size: var(--text-base);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.settings-tool-item__name {
+  flex: 1;
+  font-size: var(--text-sm);
+}
