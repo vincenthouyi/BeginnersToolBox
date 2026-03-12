@@ -1,23 +1,25 @@
 import './styles/design-system.css';
 import './App.css';
+import { lazy, Suspense } from 'react';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { TOOLS, type ToolMeta } from './registry/tools';
 import { ToolCard } from './components/ToolCard';
 import { ToolPage } from './components/ToolPage';
-import { Base64Tool } from './tools/base64/Base64Tool';
-import { JsonFormatterTool } from './tools/json-formatter/JsonFormatterTool';
-import { ColorConverterTool } from './tools/color-converter/ColorConverterTool';
-import { MarkdownPreviewTool } from './tools/markdown-preview/MarkdownPreviewTool';
-import { UrlEncoderTool } from './tools/url-encoder/UrlEncoderTool';
-import { RegexTesterTool } from './tools/regex-tester/RegexTesterTool';
-import { TimestampConverterTool } from './tools/timestamp-converter/TimestampConverterTool';
-import { HashGeneratorTool } from './tools/hash-generator/HashGeneratorTool';
-import { DataConverterTool } from './tools/data-converter/DataConverterTool';
-import { JsonDiffTool } from './tools/json-diff/JsonDiffTool';
-import { UuidGeneratorTool } from './tools/uuid-generator/UuidGeneratorTool';
-import { MetronomeTool } from './tools/metronome/MetronomeTool';
-import { MusicBoxDesignerTool } from './tools/music-box-designer/MusicBoxDesignerTool';
-import { SettingsPage } from './tools/settings/SettingsPage';
+
+const Base64Tool = lazy(() => import('./tools/base64/Base64Tool').then(m => ({ default: m.Base64Tool })));
+const JsonFormatterTool = lazy(() => import('./tools/json-formatter/JsonFormatterTool').then(m => ({ default: m.JsonFormatterTool })));
+const ColorConverterTool = lazy(() => import('./tools/color-converter/ColorConverterTool').then(m => ({ default: m.ColorConverterTool })));
+const MarkdownPreviewTool = lazy(() => import('./tools/markdown-preview/MarkdownPreviewTool').then(m => ({ default: m.MarkdownPreviewTool })));
+const UrlEncoderTool = lazy(() => import('./tools/url-encoder/UrlEncoderTool').then(m => ({ default: m.UrlEncoderTool })));
+const RegexTesterTool = lazy(() => import('./tools/regex-tester/RegexTesterTool').then(m => ({ default: m.RegexTesterTool })));
+const TimestampConverterTool = lazy(() => import('./tools/timestamp-converter/TimestampConverterTool').then(m => ({ default: m.TimestampConverterTool })));
+const HashGeneratorTool = lazy(() => import('./tools/hash-generator/HashGeneratorTool').then(m => ({ default: m.HashGeneratorTool })));
+const DataConverterTool = lazy(() => import('./tools/data-converter/DataConverterTool').then(m => ({ default: m.DataConverterTool })));
+const JsonDiffTool = lazy(() => import('./tools/json-diff/JsonDiffTool').then(m => ({ default: m.JsonDiffTool })));
+const UuidGeneratorTool = lazy(() => import('./tools/uuid-generator/UuidGeneratorTool').then(m => ({ default: m.UuidGeneratorTool })));
+const MetronomeTool = lazy(() => import('./tools/metronome/MetronomeTool').then(m => ({ default: m.MetronomeTool })));
+const MusicBoxDesignerTool = lazy(() => import('./tools/music-box-designer/MusicBoxDesignerTool').then(m => ({ default: m.MusicBoxDesignerTool })));
+const SettingsPage = lazy(() => import('./tools/settings/SettingsPage').then(m => ({ default: m.SettingsPage })));
 
 function renderTool(id: string) {
   switch (id) {
@@ -112,7 +114,9 @@ function ToolRoutePage() {
 
   return (
     <ToolPage tool={tool} onBack={() => navigate('/')}>
-      {renderTool(tool.id)}
+      <Suspense fallback={<div className="tool-loading" />}>
+        {renderTool(tool.id)}
+      </Suspense>
     </ToolPage>
   );
 }
@@ -155,7 +159,7 @@ export default function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/data-formats" element={<DataFormatsPage />} />
           <Route path="/music" element={<MusicPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/settings" element={<Suspense fallback={<div className="tool-loading" />}><SettingsPage /></Suspense>} />
           <Route path="/tools/:toolId" element={<ToolRoutePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
