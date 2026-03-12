@@ -9,10 +9,11 @@ interface Props {
 const statusLabel: Record<ToolMeta['status'], string> = {
   planned: 'Coming soon',
   wip: 'In progress',
-  ready: 'Ready',
+  ready: '',
 };
 
 export function ToolCard({ tool, onClick }: Props) {
+  const label = statusLabel[tool.status];
   return (
     <button className={`tool-card tool-card--${tool.status}`} onClick={onClick} disabled={tool.status !== 'ready'}>
       <span className="tool-card__icon" aria-hidden="true">{tool.icon}</span>
@@ -20,7 +21,7 @@ export function ToolCard({ tool, onClick }: Props) {
         <h3 className="tool-card__name">{tool.name}</h3>
         <p className="tool-card__desc">{tool.description}</p>
       </div>
-      <span className="tool-card__badge">{statusLabel[tool.status]}</span>
+      {label && <span className="tool-card__badge">{label}</span>}
     </button>
   );
 }
