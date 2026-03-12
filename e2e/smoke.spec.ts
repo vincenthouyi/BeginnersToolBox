@@ -10,6 +10,8 @@ const TOOL_IDS = [
   'timestamp-converter',
   'hash-generator',
   'data-converter',
+  'json-diff',
+  'uuid-generator',
 ];
 
 test('home page loads and shows tool cards', async ({ page }) => {
@@ -46,6 +48,48 @@ test('hash generator selects algorithm from URL param', async ({ page }) => {
   await page.goto('/#/tools/hash-generator?alg=SHA-512');
   await expect(page.locator('.hash-algo-btn--active')).toHaveCount(1);
   await expect(page.locator('.hash-algo-btn--active')).toContainText('SHA-512');
+});
+
+test('uuid generator generates UUIDs from URL params', async ({ page }) => {
+  await page.goto('/#/tools/uuid-generator?type=uuid&count=3');
+  const items = page.locator('.uuid-result-item');
+  await expect(items).toHaveCount(3);
+  // Each UUID should match the standard 8-4-4-4-12 format
+  const first = await items.first().locator('.uuid-result-value').textContent();
+  expect(first).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i);
+});
+
+test('uuid generator generates ULIDs from URL params', async ({ page }) => {
+  await page.goto('/#/tools/uuid-generator?type=ulid&count=2');
+  const items = page.locator('.uuid-result-item');
+  await expect(items).toHaveCount(2);
+  // Each ULID is 26 uppercase Crockford base32 chars
+  const first = await items.first().locator('.uuid-result-value').textContent();
+  expect(first).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/);
+});
+
+test('json diff shows changed path', async ({ page }) => {
+  await page.goto('/#/tools/json-diff');
+  await expect(page.locator('.tool-layout')).toBeVisible();
+  const textareas = page.locator('textarea.tool-textarea');
+  await textareas.nth(0).fill('{"name":"Alice"}');
+  await textareas.nth(1).fill('{"name":"Bob"}');
+  await page.getByRole('button', { name: 'Diff' }).click();
+  await expect(page.locator('.json-diff-output')).toContainText('~ name:');
+});
+
+test('json diff shows no differences for identical JSON', async ({ page }) => {
+  await page.goto('/#/tools/json-diff');
+  const textareas = page.locator('textarea.tool-textarea');
+  await textareas.nth(0).fill('{"a":1}');
+  await textareas.nth(1).fill('{"a":1}');
+  await page.getByRole('button', { name: 'Diff' }).click();
+  await expect(page.locator('.json-diff-output')).toContainText('(no differences)');
+});
+
+test('data formats page shows json-diff card', async ({ page }) => {
+  await page.goto('/#/data-formats');
+  await expect(page.getByText('JSON Diff')).toBeVisible();
 });
 
 for (const id of TOOL_IDS) {

@@ -218,3 +218,34 @@
 .json-bool  { color: #fb923c; } /* orange — true / false */
 .json-null  { color: #f87171; } /* red — null */
 .json-punct { color: #888;    } /* muted — braces, brackets, commas */
+
+/* JSON diff output */
+.json-diff-output {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.json-diff-line {
+  padding: 1px var(--space-2);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.json-diff-line--added {
+  color: #4ade80;
+  background: color-mix(in srgb, #4ade80 10%, transparent);
+}
+
+.json-diff-line--removed {
+  color: #f87171;
+  background: color-mix(in srgb, #f87171 10%, transparent);
+}
+
+.json-diff-line--changed {
+  color: #fb923c;
+  background: color-mix(in srgb, #fb923c 10%, transparent);
+}

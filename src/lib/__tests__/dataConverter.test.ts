@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { jsonToYaml, yamlToJson, jsonToCsv, csvToJson, convert } from '../dataConverter';
+import { jsonToYaml, yamlToJson, jsonToCsv, csvToJson, jsonToToml, tomlToJson, convert } from '../dataConverter';
 
 describe('jsonToYaml', () => {
   it('converts a simple object', () => {
@@ -84,6 +84,40 @@ describe('csvToJson', () => {
   });
 });
 
+describe('jsonToToml', () => {
+  it('converts a simple object', () => {
+    const result = jsonToToml('{"name":"Alice","age":30}');
+    expect(result).toContain('name = "Alice"');
+    expect(result).toContain('age = 30');
+  });
+
+  it('throws on array input', () => {
+    expect(() => jsonToToml('[1, 2, 3]')).toThrow('TOML requires a top-level object');
+  });
+
+  it('throws on invalid JSON', () => {
+    expect(() => jsonToToml('{bad}')).toThrow();
+  });
+});
+
+describe('tomlToJson', () => {
+  it('converts a simple TOML object', () => {
+    const result = JSON.parse(tomlToJson('name = "Alice"\nage = 30', 2));
+    expect(result).toEqual({ name: 'Alice', age: 30 });
+  });
+
+  it('respects indent option', () => {
+    const r2 = tomlToJson('x = 1', 2);
+    const r4 = tomlToJson('x = 1', 4);
+    expect(r2).toBe('{\n  "x": 1\n}');
+    expect(r4).toBe('{\n    "x": 1\n}');
+  });
+
+  it('throws on invalid TOML', () => {
+    expect(() => tomlToJson('not = valid = toml', 2)).toThrow();
+  });
+});
+
 describe('convert', () => {
   it('throws on empty input', () => {
     expect(() => convert('  ', 'json', 'yaml', { jsonIndent: 2, csvDelimiter: ',' })).toThrow('Input is empty');
@@ -98,5 +132,12 @@ describe('convert', () => {
     const yaml = convert(json, 'json', 'yaml', { jsonIndent: 2, csvDelimiter: ',' });
     const backToJson = convert(yaml, 'yaml', 'json', { jsonIndent: 2, csvDelimiter: ',' });
     expect(JSON.parse(backToJson)).toEqual({ key: 'value' });
+  });
+
+  it('performs JSON -> TOML round trip', () => {
+    const json = '{"name":"Alice","score":42}';
+    const toml = convert(json, 'json', 'toml', { jsonIndent: 2, csvDelimiter: ',' });
+    const backToJson = convert(toml, 'toml', 'json', { jsonIndent: 2, csvDelimiter: ',' });
+    expect(JSON.parse(backToJson)).toEqual({ name: 'Alice', score: 42 });
   });
 });

@@ -13,6 +13,8 @@ import { RegexTesterTool } from './tools/regex-tester/RegexTesterTool';
 import { TimestampConverterTool } from './tools/timestamp-converter/TimestampConverterTool';
 import { HashGeneratorTool } from './tools/hash-generator/HashGeneratorTool';
 import { DataConverterTool } from './tools/data-converter/DataConverterTool';
+import { JsonDiffTool } from './tools/json-diff/JsonDiffTool';
+import { UuidGeneratorTool } from './tools/uuid-generator/UuidGeneratorTool';
 
 function renderTool(id: string) {
   switch (id) {
@@ -25,6 +27,8 @@ function renderTool(id: string) {
     case 'timestamp-converter': return <TimestampConverterTool />;
     case 'hash-generator': return <HashGeneratorTool />;
     case 'data-converter': return <DataConverterTool />;
+    case 'json-diff': return <JsonDiffTool />;
+    case 'uuid-generator': return <UuidGeneratorTool />;
     default: return <p>Tool not found.</p>;
   }
 }
@@ -51,7 +55,7 @@ function HomePage() {
 
 function DataFormatsPage() {
   const navigate = useNavigate();
-  const dataFormatToolIds = ['json-formatter', 'data-converter'];
+  const dataFormatToolIds = ['json-formatter', 'data-converter', 'json-diff'];
   const dataFormatTools = TOOLS.filter((tool) => dataFormatToolIds.includes(tool.id));
 
   return (

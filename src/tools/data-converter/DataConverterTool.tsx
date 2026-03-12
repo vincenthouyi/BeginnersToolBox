@@ -10,6 +10,8 @@ const SUPPORTED_PAIRS = new Set<SupportedPair>([
   'yaml->json',
   'json->csv',
   'csv->json',
+  'json->toml',
+  'toml->json',
 ]);
 
 function isSupportedPair(from: InputFormat, to: OutputFormat): boolean {
@@ -93,6 +95,7 @@ export function DataConverterTool() {
             <option value="json">JSON</option>
             <option value="yaml">YAML</option>
             <option value="csv">CSV</option>
+            <option value="toml">TOML</option>
           </select>
         </label>
 
@@ -106,6 +109,7 @@ export function DataConverterTool() {
             <option value="json">JSON</option>
             <option value="yaml">YAML</option>
             <option value="csv">CSV</option>
+            <option value="toml">TOML</option>
           </select>
         </label>
 
@@ -154,7 +158,7 @@ export function DataConverterTool() {
 
       {!supported && (
         <div className="tool-message tool-message--error">
-          {`${fromFmt.toUpperCase()} → ${toFmt.toUpperCase()} is not supported. Supported conversions: JSON ↔ YAML, JSON ↔ CSV.`}
+          {`${fromFmt.toUpperCase()} → ${toFmt.toUpperCase()} is not supported. Supported conversions: JSON ↔ YAML, JSON ↔ CSV, JSON ↔ TOML.`}
         </div>
       )}
 

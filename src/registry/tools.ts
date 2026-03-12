@@ -82,9 +82,25 @@ export const TOOLS: ToolMeta[] = [
   {
     id: 'data-converter',
     name: 'Data Converter',
-    description: 'Convert between JSON, YAML, and CSV formats in the browser.',
+    description: 'Convert between JSON, YAML, CSV, and TOML formats in the browser.',
     icon: '🔄',
     category: 'data',
+    status: 'ready',
+  },
+  {
+    id: 'json-diff',
+    name: 'JSON Diff',
+    description: 'Compare two JSON documents and view added, removed, and changed paths.',
+    icon: '🔀',
+    category: 'data',
+    status: 'ready',
+  },
+  {
+    id: 'uuid-generator',
+    name: 'UUID / ULID Generator',
+    description: 'Generate RFC-4122 UUIDs or sortable ULIDs in bulk.',
+    icon: '🪪',
+    category: 'misc',
     status: 'ready',
   },
 ];

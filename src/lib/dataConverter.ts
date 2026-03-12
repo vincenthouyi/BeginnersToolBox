@@ -1,8 +1,9 @@
 import * as YAML from 'yaml';
 import Papa from 'papaparse';
+import { parse as parseTOML, stringify as stringifyTOML } from 'smol-toml';
 
-export type InputFormat = 'json' | 'yaml' | 'csv';
-export type OutputFormat = 'json' | 'yaml' | 'csv';
+export type InputFormat = 'json' | 'yaml' | 'csv' | 'toml';
+export type OutputFormat = 'json' | 'yaml' | 'csv' | 'toml';
 
 export interface ConvertOptions {
   jsonIndent: 2 | 4;
@@ -64,6 +65,19 @@ export function csvToJson(input: string, delimiter: ',' | ';' | '\t', indent: 2 
   return JSON.stringify(result.data, null, indent);
 }
 
+export function jsonToToml(input: string): string {
+  const parsed: unknown = JSON.parse(input);
+  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
+    throw new Error('TOML requires a top-level object (not an array or primitive).');
+  }
+  return stringifyTOML(parsed as Record<string, ReturnType<typeof parseTOML>[string]>);
+}
+
+export function tomlToJson(input: string, indent: 2 | 4): string {
+  const parsed = parseTOML(input);
+  return JSON.stringify(parsed, null, indent);
+}
+
 export function convert(
   input: string,
   from: InputFormat,
@@ -77,6 +91,8 @@ export function convert(
   if (from === 'yaml' && to === 'json') return yamlToJson(trimmed, options.jsonIndent);
   if (from === 'json' && to === 'csv') return jsonToCsv(trimmed, options.csvDelimiter);
   if (from === 'csv' && to === 'json') return csvToJson(trimmed, options.csvDelimiter, options.jsonIndent);
+  if (from === 'json' && to === 'toml') return jsonToToml(trimmed);
+  if (from === 'toml' && to === 'json') return tomlToJson(trimmed, options.jsonIndent);
 
   throw new Error(`Conversion from ${from.toUpperCase()} to ${to.toUpperCase()} is not supported.`);
 }
