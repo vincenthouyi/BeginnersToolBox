@@ -114,6 +114,25 @@ test('data formats page shows json-diff card', async ({ page }) => {
   await expect(page.getByText('JSON Diff')).toBeVisible();
 });
 
+test('data formats page shows jsonpath card', async ({ page }) => {
+  await page.goto('/#/data-formats');
+  await expect(page.getByText('JSONPath Query')).toBeVisible();
+});
+
+test('jsonpath tool runs a query and shows matches', async ({ page }) => {
+  await page.goto('/#/tools/jsonpath');
+  await expect(page.locator('.tool-layout')).toBeVisible();
+  await page.locator('textarea.tool-textarea').fill('{"a":{"b":42}}');
+  await page.locator('input.jsonpath-expr-input').fill('$.a.b');
+  await page.getByRole('button', { name: 'Run' }).click();
+  await expect(page.locator('.jsonpath-match').first()).toContainText('42');
+});
+
+test('jsonpath tool loads expression from URL param', async ({ page }) => {
+  await page.goto('/#/tools/jsonpath?expr=$.a.b');
+  await expect(page.locator('input.jsonpath-expr-input')).toHaveValue('$.a.b');
+});
+
 test('music page loads: /music', async ({ page }) => {
   await page.goto('/#/music');
   await expect(page.getByRole('heading', { name: 'Music', exact: true })).toBeVisible();

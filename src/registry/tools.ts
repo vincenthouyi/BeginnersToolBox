@@ -127,6 +127,14 @@ export const TOOLS: ToolMeta[] = [
     category: 'music',
     status: 'ready',
   },
+  {
+    id: 'jsonpath',
+    name: 'JSONPath Query',
+    description: 'Query JSON with JSONPath expressions like $.store.book[*].title or $..price.',
+    icon: '🔎',
+    category: 'data',
+    status: 'ready',
+  },
 ];
 
 export const getToolById = (id: string): ToolMeta | undefined =>
