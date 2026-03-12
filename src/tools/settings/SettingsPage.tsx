@@ -1,6 +1,13 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TOOLS } from '../../registry/tools';
 import { clearAll, clearTool, toolsWithStorage } from '../../lib/localStorageAdmin';
+import {
+  applyThemePreference,
+  getThemePreference,
+  setThemePreference,
+  type ThemePreference,
+} from '../../lib/theme';
 import './SettingsPage.css';
 
 function confirmAndRun(message: string, action: () => void): void {
@@ -12,6 +19,18 @@ function confirmAndRun(message: string, action: () => void): void {
 
 export function SettingsPage() {
   const navigate = useNavigate();
+  const [themePref, setThemePrefState] = useState<ThemePreference>(() => getThemePreference());
+
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'btb:theme') {
+        setThemePrefState(getThemePreference());
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
   const storageToolIds = toolsWithStorage();
   const storageTools = storageToolIds
     .map((id) => TOOLS.find((t) => t.id === id))
@@ -26,6 +45,58 @@ export function SettingsPage() {
         <h1 className="settings-page__title">Settings</h1>
         <p className="settings-page__desc">Manage data saved in your browser.</p>
       </div>
+
+      <section className="settings-section">
+        <h2 className="settings-section__heading">Theme</h2>
+        <p className="settings-section__note">Choose a theme. “System” follows your device setting.</p>
+
+        <div className="settings-theme">
+          <label className="settings-theme__option">
+            <input
+              type="radio"
+              name="theme"
+              value="system"
+              checked={themePref === 'system'}
+              onChange={() => {
+                setThemePrefState('system');
+                setThemePreference('system');
+                applyThemePreference('system');
+              }}
+            />
+            <span>System</span>
+          </label>
+
+          <label className="settings-theme__option">
+            <input
+              type="radio"
+              name="theme"
+              value="light"
+              checked={themePref === 'light'}
+              onChange={() => {
+                setThemePrefState('light');
+                setThemePreference('light');
+                applyThemePreference('light');
+              }}
+            />
+            <span>Light</span>
+          </label>
+
+          <label className="settings-theme__option">
+            <input
+              type="radio"
+              name="theme"
+              value="dark"
+              checked={themePref === 'dark'}
+              onChange={() => {
+                setThemePrefState('dark');
+                setThemePreference('dark');
+                applyThemePreference('dark');
+              }}
+            />
+            <span>Dark</span>
+          </label>
+        </div>
+      </section>
 
       <section className="settings-section">
         <h2 className="settings-section__heading">All saved data</h2>

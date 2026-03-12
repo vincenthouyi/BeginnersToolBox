@@ -1,0 +1,13 @@
+/* Theme overrides: use `.dark` class on <html> */
+
+.dark {
+  --color-bg: #0f0f0f;
+  --color-surface: #1a1a1a;
+  --color-border: #2a2a2a;
+  --color-text: #e8e8e8;
+  --color-text-muted: #9aa0a6;
+  --color-accent: #7c6af7;
+  --color-accent-hover: #9b8cf9;
+  --color-success: #4ade80;
+  --color-error: #f87171;
+}

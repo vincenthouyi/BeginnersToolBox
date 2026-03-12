@@ -1,16 +1,16 @@
 /* BeginnersToolBox — Minimalist Design System */
 
 :root {
-  /* Colors */
-  --color-bg: #0f0f0f;
-  --color-surface: #1a1a1a;
-  --color-border: #2a2a2a;
-  --color-text: #e8e8e8;
-  --color-text-muted: #888;
-  --color-accent: #7c6af7;
-  --color-accent-hover: #9b8cf9;
-  --color-success: #4ade80;
-  --color-error: #f87171;
+  /* Colors (GitHub-ish light) */
+  --color-bg: #f6f8fa;
+  --color-surface: #ffffff;
+  --color-border: #d0d7de;
+  --color-text: #1f2328;
+  --color-text-muted: #57606a;
+  --color-accent: #0969da;
+  --color-accent-hover: #0550ae;
+  --color-success: #1a7f37;
+  --color-error: #cf222e;
 
   /* Typography */
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;

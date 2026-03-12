@@ -89,6 +89,19 @@
   flex-shrink: 0;
 }
 
+.settings-theme {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.settings-theme__option {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+}
+
 .settings-tool-list {
   list-style: none;
   display: flex;

@@ -1,6 +1,8 @@
 import './styles/design-system.css';
+import './styles/theme.css';
 import './App.css';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
+import { initThemeSync } from './lib/theme';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { TOOLS, type ToolMeta } from './registry/tools';
 import { ToolCard } from './components/ToolCard';
@@ -150,6 +152,10 @@ function Header() {
 }
 
 export default function App() {
+  useEffect(() => {
+    return initThemeSync();
+  }, []);
+
   return (
     <div className="app">
       <Header />
