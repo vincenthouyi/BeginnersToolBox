@@ -23,6 +23,7 @@ const TOOL_KEYS: Record<string, string[]> = {
   'json-diff': ['json-diff:left', 'json-diff:right', 'json-diff:sort-keys'],
   'metronome': ['metro:bpm', 'metro:beats', 'metro:accent', 'metro:volume', 'metro:countdown'],
   'music-box-designer': ['mbox:bpm', 'mbox:volume', 'mbox:grid'],
+  'tuner': ['tuner:a4'],
 };
 
 /** All app-owned localStorage keys across all tools. */

@@ -119,6 +119,14 @@ export const TOOLS: ToolMeta[] = [
     category: 'music',
     status: 'ready',
   },
+  {
+    id: 'tuner',
+    name: 'Tuner',
+    description: 'Tune your instrument with a real-time microphone pitch detector and cents meter.',
+    icon: '🎸',
+    category: 'music',
+    status: 'ready',
+  },
 ];
 
 export const getToolById = (id: string): ToolMeta | undefined =>

@@ -21,6 +21,7 @@ const JsonDiffTool = lazy(() => import('./tools/json-diff/JsonDiffTool').then(m 
 const UuidGeneratorTool = lazy(() => import('./tools/uuid-generator/UuidGeneratorTool').then(m => ({ default: m.UuidGeneratorTool })));
 const MetronomeTool = lazy(() => import('./tools/metronome/MetronomeTool').then(m => ({ default: m.MetronomeTool })));
 const MusicBoxDesignerTool = lazy(() => import('./tools/music-box-designer/MusicBoxDesignerTool').then(m => ({ default: m.MusicBoxDesignerTool })));
+const TunerTool = lazy(() => import('./tools/tuner/TunerTool').then(m => ({ default: m.TunerTool })));
 const SettingsPage = lazy(() => import('./tools/settings/SettingsPage').then(m => ({ default: m.SettingsPage })));
 
 function renderTool(id: string) {
@@ -38,6 +39,7 @@ function renderTool(id: string) {
     case 'uuid-generator': return <UuidGeneratorTool />;
     case 'metronome': return <MetronomeTool />;
     case 'music-box-designer': return <MusicBoxDesignerTool />;
+    case 'tuner': return <TunerTool />;
     default: return <p>Tool not found.</p>;
   }
 }

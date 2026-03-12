@@ -14,6 +14,7 @@ const TOOL_IDS = [
   'uuid-generator',
   'metronome',
   'music-box-designer',
+  'tuner',
 ];
 
 test('home page loads and shows tool cards', async ({ page }) => {
@@ -187,6 +188,22 @@ test('music box designer renders step grid', async ({ page }) => {
   await expect(page.locator('.mbox-grid')).toBeVisible();
   // Should have note cells
   await expect(page.locator('.mbox-cell--note').first()).toBeVisible();
+});
+
+test('tuner renders note display, meter, and controls', async ({ page }) => {
+  await page.goto('/#/tools/tuner');
+  await expect(page.locator('.tool-layout')).toBeVisible();
+  await expect(page.locator('.tuner-note-display')).toBeVisible();
+  await expect(page.locator('.tuner-meter')).toBeVisible();
+  await expect(page.locator('.tuner-controls')).toBeVisible();
+  await expect(page.locator('.tuner-calibration')).toBeVisible();
+  // Start Tuner button should be visible in idle state
+  await expect(page.getByRole('button', { name: 'Start Tuner' })).toBeVisible();
+});
+
+test('music page shows tuner card', async ({ page }) => {
+  await page.goto('/#/music');
+  await expect(page.getByText('Tuner')).toBeVisible();
 });
 
 for (const id of TOOL_IDS) {
