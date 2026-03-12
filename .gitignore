@@ -27,3 +27,9 @@ dist-ssr
 playwright-report/
 test-results/
 
+# Workspace / agent meta (do not commit)
+BOOTSTRAP.md
+HEARTBEAT.md
+SOUL.md
+TOOLS.md
+
