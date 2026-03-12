@@ -22,6 +22,7 @@ const UuidGeneratorTool = lazy(() => import('./tools/uuid-generator/UuidGenerato
 const MetronomeTool = lazy(() => import('./tools/metronome/MetronomeTool').then(m => ({ default: m.MetronomeTool })));
 const MusicBoxDesignerTool = lazy(() => import('./tools/music-box-designer/MusicBoxDesignerTool').then(m => ({ default: m.MusicBoxDesignerTool })));
 const TunerTool = lazy(() => import('./tools/tuner/TunerTool').then(m => ({ default: m.TunerTool })));
+const JsonPathTool = lazy(() => import('./tools/jsonpath/JsonPathTool').then(m => ({ default: m.JsonPathTool })));
 const SettingsPage = lazy(() => import('./tools/settings/SettingsPage').then(m => ({ default: m.SettingsPage })));
 
 function renderTool(id: string) {
@@ -40,6 +41,7 @@ function renderTool(id: string) {
     case 'metronome': return <MetronomeTool />;
     case 'music-box-designer': return <MusicBoxDesignerTool />;
     case 'tuner': return <TunerTool />;
+    case 'jsonpath': return <JsonPathTool />;
     default: return <p>Tool not found.</p>;
   }
 }
@@ -66,7 +68,7 @@ function HomePage() {
 
 function DataFormatsPage() {
   const navigate = useNavigate();
-  const dataFormatToolIds = ['json-formatter', 'data-converter', 'json-diff'];
+  const dataFormatToolIds = ['json-formatter', 'data-converter', 'json-diff', 'jsonpath'];
   const dataFormatTools = TOOLS.filter((tool) => dataFormatToolIds.includes(tool.id));
 
   return (
@@ -96,6 +98,72 @@ function MusicPage() {
       <p className="tools-section__sub">Browser-based music tools — no plugins needed.</p>
       <div className="tools-grid">
         {musicTools.map((tool) => (
+          <ToolCard
+            key={tool.id}
+            tool={tool}
+            onClick={() => tool.status === 'ready' && navigate(`/tools/${tool.id}`)}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TextPage() {
+  const navigate = useNavigate();
+  const textToolIds = ['markdown-preview', 'regex-tester'];
+  const textTools = TOOLS.filter((tool) => textToolIds.includes(tool.id));
+
+  return (
+    <section className="tools-section">
+      <h2 className="tools-section__title">Text</h2>
+      <p className="tools-section__sub">Tools for working with text and patterns.</p>
+      <div className="tools-grid">
+        {textTools.map((tool) => (
+          <ToolCard
+            key={tool.id}
+            tool={tool}
+            onClick={() => tool.status === 'ready' && navigate(`/tools/${tool.id}`)}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function EncodingPage() {
+  const navigate = useNavigate();
+  const encodingToolIds = ['base64', 'url-encoder', 'hash-generator'];
+  const encodingTools = TOOLS.filter((tool) => encodingToolIds.includes(tool.id));
+
+  return (
+    <section className="tools-section">
+      <h2 className="tools-section__title">Encoding</h2>
+      <p className="tools-section__sub">Encode, decode, and hash data in-browser.</p>
+      <div className="tools-grid">
+        {encodingTools.map((tool) => (
+          <ToolCard
+            key={tool.id}
+            tool={tool}
+            onClick={() => tool.status === 'ready' && navigate(`/tools/${tool.id}`)}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function DevPage() {
+  const navigate = useNavigate();
+  const devToolIds = ['color-converter', 'timestamp-converter', 'uuid-generator'];
+  const devTools = TOOLS.filter((tool) => devToolIds.includes(tool.id));
+
+  return (
+    <section className="tools-section">
+      <h2 className="tools-section__title">Dev</h2>
+      <p className="tools-section__sub">Handy utilities for developers.</p>
+      <div className="tools-grid">
+        {devTools.map((tool) => (
           <ToolCard
             key={tool.id}
             tool={tool}
@@ -139,6 +207,9 @@ function Header() {
           </Link>
 
           <nav className="app-nav" aria-label="Primary">
+            <Link className="app-nav__link" to="/text">Text</Link>
+            <Link className="app-nav__link" to="/encoding">Encoding</Link>
+            <Link className="app-nav__link" to="/dev">Dev</Link>
             <Link className="app-nav__link" to="/data-formats">Data Formats</Link>
             <Link className="app-nav__link" to="/music">Music</Link>
             <Link className="app-nav__link" to="/settings">Settings</Link>
@@ -165,6 +236,9 @@ export default function App() {
       <main className="app-main">
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/text" element={<TextPage />} />
+          <Route path="/encoding" element={<EncodingPage />} />
+          <Route path="/dev" element={<DevPage />} />
           <Route path="/data-formats" element={<DataFormatsPage />} />
           <Route path="/music" element={<MusicPage />} />
           <Route path="/settings" element={<Suspense fallback={<div className="tool-loading" />}><SettingsPage /></Suspense>} />

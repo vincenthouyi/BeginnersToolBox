@@ -15,6 +15,7 @@ const TOOL_IDS = [
   'metronome',
   'music-box-designer',
   'tuner',
+  'jsonpath',
 ];
 
 test('home page loads and shows tool cards', async ({ page }) => {
@@ -23,6 +24,24 @@ test('home page loads and shows tool cards', async ({ page }) => {
   // At least one tool card should be present
   const cards = page.locator('.tool-card');
   await expect(cards.first()).toBeVisible();
+});
+
+test('text page loads: /text', async ({ page }) => {
+  await page.goto('/#/text');
+  await expect(page.getByRole('heading', { name: 'Text', exact: true })).toBeVisible();
+  await expect(page.locator('.tool-card').first()).toBeVisible();
+});
+
+test('encoding page loads: /encoding', async ({ page }) => {
+  await page.goto('/#/encoding');
+  await expect(page.getByRole('heading', { name: 'Encoding', exact: true })).toBeVisible();
+  await expect(page.locator('.tool-card').first()).toBeVisible();
+});
+
+test('dev page loads: /dev', async ({ page }) => {
+  await page.goto('/#/dev');
+  await expect(page.getByRole('heading', { name: 'Dev', exact: true })).toBeVisible();
+  await expect(page.locator('.tool-card').first()).toBeVisible();
 });
 
 test('data formats page loads: /data-formats', async ({ page }) => {
