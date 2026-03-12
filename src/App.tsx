@@ -1,7 +1,7 @@
 import './styles/design-system.css';
 import './styles/theme.css';
 import './App.css';
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { initThemeSync } from './lib/theme';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { TOOLS, type ToolMeta } from './registry/tools';
@@ -193,9 +193,45 @@ function ToolRoutePage() {
   );
 }
 
+const NAV_ITEMS = [
+  { to: '/', label: 'Home' },
+  { to: '/data-formats', label: 'Data Formats' },
+  { to: '/text', label: 'Text' },
+  { to: '/encoding', label: 'Encoding' },
+  { to: '/dev', label: 'Dev' },
+  { to: '/music', label: 'Music' },
+  { to: '/settings', label: 'Settings' },
+];
+
 function Header() {
   const location = useLocation();
   const atHome = location.pathname === '/';
+  const [menuOpen, setMenuOpen] = useState(false);
+  const hamburgerRef = useRef<HTMLDivElement>(null);
+
+  // Close menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
+  // Close on Escape or outside click when menu is open
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+    const onPointer = (e: PointerEvent) => {
+      if (hamburgerRef.current && !hamburgerRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onPointer);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onPointer);
+    };
+  }, [menuOpen]);
 
   return (
     <header className="app-header">
@@ -214,6 +250,31 @@ function Header() {
             <Link className="app-nav__link" to="/music">Music</Link>
             <Link className="app-nav__link" to="/settings">Settings</Link>
           </nav>
+
+          <div className="app-hamburger-wrap" ref={hamburgerRef}>
+            <button
+              className="app-hamburger"
+              aria-label="Open navigation menu"
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen((o) => !o)}
+            >
+              ☰
+            </button>
+            {menuOpen && (
+              <nav className="app-mobile-menu" aria-label="Mobile navigation">
+                {NAV_ITEMS.map(({ to, label }) => (
+                  <Link
+                    key={to}
+                    className="app-mobile-menu__item"
+                    to={to}
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    {label}
+                  </Link>
+                ))}
+              </nav>
+            )}
+          </div>
         </div>
 
         <p className="app-tagline">

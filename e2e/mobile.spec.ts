@@ -26,3 +26,28 @@ test('data-converter renders on mobile viewport', async ({ page }) => {
   await expect(page.locator('.tool-textarea').first()).toBeVisible();
   await expect(page.locator('.tool-output').first()).toBeVisible();
 });
+
+test('hamburger menu opens and navigates on mobile', async ({ page }) => {
+  await page.setViewportSize(MOBILE_VIEWPORT);
+  await page.goto('/');
+
+  // Desktop nav should be hidden; hamburger should be visible
+  await expect(page.locator('.app-nav')).toBeHidden();
+  const hamburger = page.locator('.app-hamburger');
+  await expect(hamburger).toBeVisible();
+  await expect(hamburger).toHaveAttribute('aria-expanded', 'false');
+
+  // Open the menu
+  await hamburger.click();
+  await expect(hamburger).toHaveAttribute('aria-expanded', 'true');
+  const mobileMenu = page.locator('.app-mobile-menu');
+  await expect(mobileMenu).toBeVisible();
+
+  // Navigate to Music page via menu
+  await mobileMenu.locator('a', { hasText: 'Music' }).click();
+  await expect(page).toHaveURL(/#\/music/);
+  await expect(page.locator('.tools-section__title')).toHaveText('Music');
+
+  // Menu should be closed after navigation
+  await expect(page.locator('.app-mobile-menu')).toBeHidden();
+});

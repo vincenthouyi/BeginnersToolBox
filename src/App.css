@@ -109,6 +109,62 @@
   }
 }
 
+/* Hamburger menu (hidden on desktop, shown on mobile) */
+.app-hamburger {
+  display: none;
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  color: var(--color-text);
+  font-size: var(--text-lg);
+  line-height: 1;
+}
+
+.app-hamburger-wrap {
+  position: relative;
+}
+
+.app-mobile-menu {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.app-mobile-menu__item {
+  color: var(--color-text);
+  text-decoration: none;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+}
+
+.app-mobile-menu__item:hover {
+  background: var(--color-bg);
+}
+
+@media (max-width: 640px) {
+  .app-nav {
+    display: none;
+  }
+
+  .app-hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 420px) {
   .app-header {
     padding: var(--space-4) var(--space-3);
