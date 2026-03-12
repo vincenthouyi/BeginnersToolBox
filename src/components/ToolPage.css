@@ -60,3 +60,17 @@
   color: var(--color-text-muted);
   opacity: 0.7;
 }
+
+@media (max-width: 420px) {
+  .tool-page {
+    gap: var(--space-6);
+  }
+
+  .tool-page__title {
+    font-size: var(--text-xl);
+  }
+
+  .tool-page__icon {
+    font-size: var(--text-2xl);
+  }
+}
