@@ -13,6 +13,12 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@codemirror/lang-json": "^6.0.2",
+    "@codemirror/language": "^6.12.2",
+    "@codemirror/lint": "^6.9.5",
+    "@codemirror/state": "^6.6.0",
+    "@codemirror/view": "^6.40.0",
+    "codemirror": "^6.0.2",
     "jsonpath-plus": "^10.4.0",
     "papaparse": "^5.5.3",
     "react": "^19.2.0",

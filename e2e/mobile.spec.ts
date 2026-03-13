@@ -16,7 +16,7 @@ test('tool page (json-formatter) renders on mobile viewport', async ({ page }) =
   await page.goto('/#/tools/json-formatter');
   await expect(page.locator('.tool-layout')).toBeVisible();
   // Panels should be stacked (tool-row--split uses 1fr below 700px)
-  await expect(page.locator('.tool-textarea').first()).toBeVisible();
+  await expect(page.locator('.cm-editor').first()).toBeVisible();
 });
 
 test('data-converter renders on mobile viewport', async ({ page }) => {

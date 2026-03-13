@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import '../tools.css';
+import './JsonFormatterTool.css';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { sortJsonKeysDeep } from '../../lib/json';
+import { JsonCodeEditor } from './JsonCodeEditor';
 
 /**
  * Tokenises already-validated (prettified) JSON and wraps tokens in
@@ -62,9 +64,11 @@ export function JsonFormatterTool() {
   const [error, setError] = useState('');
   const [sortKeys, setSortKeys] = useLocalStorage<boolean>('json:sortKeys', false);
   const [copied, setCopied] = useState(false);
+  const [validateMsg, setValidateMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
   function prettify() {
     setError('');
+    setValidateMsg(null);
     try {
       const parsed = JSON.parse(input);
       const normalized = sortKeys ? sortJsonKeysDeep(parsed) : parsed;
@@ -78,6 +82,7 @@ export function JsonFormatterTool() {
 
   function minify() {
     setError('');
+    setValidateMsg(null);
     try {
       const parsed = JSON.parse(input);
       const normalized = sortKeys ? sortJsonKeysDeep(parsed) : parsed;
@@ -86,6 +91,28 @@ export function JsonFormatterTool() {
       setHighlighted(highlightJson(formatted));
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Invalid JSON');
+    }
+  }
+
+  function validate() {
+    setError('');
+    setValidateMsg(null);
+    if (!input.trim()) return;
+    try {
+      JSON.parse(input);
+      setValidateMsg({ ok: true, text: 'Valid JSON \u2713' });
+    } catch (e) {
+      if (!(e instanceof SyntaxError)) return;
+      const posMatch = e.message.match(/at position (\d+)/);
+      if (posMatch) {
+        const pos = parseInt(posMatch[1], 10);
+        const lines = input.slice(0, pos).split('\n');
+        const line = lines.length;
+        const col = lines[lines.length - 1].length + 1;
+        setValidateMsg({ ok: false, text: `${e.message} (line ${line}, col ${col})` });
+      } else {
+        setValidateMsg({ ok: false, text: e.message });
+      }
     }
   }
 
@@ -101,12 +128,9 @@ export function JsonFormatterTool() {
       <div className="tool-row tool-row--split">
         <div className="tool-panel">
           <label className="tool-label">JSON Input</label>
-          <textarea
-            className="tool-textarea"
-            value={input}
-            onChange={(e) => { setInput(e.target.value); setError(''); }}
-            placeholder={'{\n  "key": "value"\n}'}
-            spellCheck={false}
+          <JsonCodeEditor
+            initialValue={input}
+            onChange={(v) => { setInput(v); setError(''); setValidateMsg(null); }}
           />
         </div>
         <div className="tool-panel">
@@ -122,6 +146,7 @@ export function JsonFormatterTool() {
       <div className="tool-controls">
         <button className="tool-btn tool-btn--primary" onClick={prettify}>Prettify</button>
         <button className="tool-btn tool-btn--primary" onClick={minify}>Minify</button>
+        <button className="tool-btn" onClick={validate} disabled={!input.trim()}>Validate</button>
         <label className="tool-label" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           Indent:
           <select className="tool-select" value={indent} onChange={(e) => setIndent(Number(e.target.value))}>
@@ -142,6 +167,11 @@ export function JsonFormatterTool() {
       </div>
 
       {error && <div className="tool-message tool-message--error">{error}</div>}
+      {validateMsg && (
+        <div className={`tool-message ${validateMsg.ok ? 'tool-message--success' : 'tool-message--error'}`}>
+          {validateMsg.text}
+        </div>
+      )}
     </div>
   );
 }

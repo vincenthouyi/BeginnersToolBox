@@ -1,0 +1,41 @@
+.json-cm-editor {
+  width: 100%;
+}
+
+.json-cm-editor .cm-editor {
+  width: 100%;
+  min-height: 180px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text);
+  transition: border-color var(--transition-fast);
+}
+
+.json-cm-editor .cm-editor.cm-focused {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+.json-cm-editor .cm-editor .cm-scroller {
+  min-height: 180px;
+}
+
+.json-cm-editor .cm-editor .cm-content {
+  padding: var(--space-3);
+}
+
+@media (max-width: 420px) {
+  /* Prevent iOS Safari from zooming on focus (requires font-size >= 16px) */
+  .json-cm-editor .cm-editor .cm-scroller {
+    font-size: 1rem;
+  }
+
+  .json-cm-editor .cm-editor {
+    min-height: 140px;
+  }
+
+  .json-cm-editor .cm-editor .cm-scroller {
+    min-height: 140px;
+  }
+}
