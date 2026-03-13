@@ -109,6 +109,39 @@
   }
 }
 
+/* Search input */
+.app-search {
+  flex: 1;
+  min-width: 0;
+  max-width: 280px;
+  height: 2rem;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--text-sm);
+  font-family: inherit;
+}
+
+.app-search::placeholder {
+  color: var(--color-text-muted);
+}
+
+.app-search:focus {
+  outline: none;
+  border-color: var(--color-accent);
+}
+
+/* On mobile the search wraps below the logo/hamburger row */
+@media (max-width: 640px) {
+  .app-search {
+    order: 100;
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
 /* Hamburger menu (hidden on desktop, shown on mobile) */
 .app-hamburger {
   display: none;

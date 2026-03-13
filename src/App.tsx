@@ -3,7 +3,7 @@ import './styles/theme.css';
 import './App.css';
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { initThemeSync } from './lib/theme';
-import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { TOOLS, type ToolMeta } from './registry/tools';
 import { ToolCard } from './components/ToolCard';
 import { ToolPage } from './components/ToolPage';
@@ -46,15 +46,33 @@ function renderTool(id: string) {
   }
 }
 
+function filterTools(tools: ToolMeta[], q: string): ToolMeta[] {
+  const lower = q.trim().toLowerCase();
+  if (!lower) return tools;
+  return tools.filter(
+    (t) =>
+      t.name.toLowerCase().includes(lower) ||
+      t.description.toLowerCase().includes(lower) ||
+      t.id.toLowerCase().includes(lower),
+  );
+}
+
 function HomePage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const query = (searchParams.get('q') ?? '').slice(0, 80);
+  const filtered = filterTools(TOOLS, query);
 
   return (
     <section className="tools-section">
       <h2 className="tools-section__title">All Tools</h2>
-      <p className="tools-section__sub">{TOOLS.length} tools · No account needed · 100% in-browser</p>
+      <p className="tools-section__sub">
+        {query
+          ? `${filtered.length} tool${filtered.length !== 1 ? 's' : ''} found`
+          : `${TOOLS.length} tools · No account needed · 100% in-browser`}
+      </p>
       <div className="tools-grid">
-        {TOOLS.map((tool) => (
+        {filtered.map((tool) => (
           <ToolCard
             key={tool.id}
             tool={tool}
@@ -205,15 +223,30 @@ const NAV_ITEMS = [
 
 function Header() {
   const location = useLocation();
+  const navigate = useNavigate();
   const atHome = location.pathname === '/';
   const [menuOpen, setMenuOpen] = useState(false);
   const hamburgerRef = useRef<HTMLDivElement>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchValue, setSearchValue] = useState(
+    atHome ? (searchParams.get('q') ?? '') : '',
+  );
 
   // Close menu on route change.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setMenuOpen(false);
   }, [location.pathname]);
+
+  // Sync search input from URL when location changes (handles back/forward + route changes)
+  useEffect(() => {
+    if (location.pathname === '/') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSearchValue(searchParams.get('q') ?? '');
+    } else {
+      setSearchValue('');
+    }
+  }, [location.pathname, location.search, searchParams]);
 
   // Close on Escape or outside click when menu is open
   useEffect(() => {
@@ -234,6 +267,30 @@ function Header() {
     };
   }, [menuOpen]);
 
+  const handleSearchChange = (value: string) => {
+    const v = value.slice(0, 80);
+    setSearchValue(v);
+    if (atHome) {
+      if (v) setSearchParams({ q: v }, { replace: true });
+      else setSearchParams({}, { replace: true });
+    } else {
+      navigate(v ? `/?q=${encodeURIComponent(v)}` : '/');
+    }
+  };
+
+  const handleSearchKey = (key: string) => {
+    if (key === 'Escape') {
+      setSearchValue('');
+      if (atHome) setSearchParams({}, { replace: true });
+    } else if (key === 'Enter') {
+      const results = filterTools(TOOLS, searchValue);
+      if (results.length === 1 && results[0].status === 'ready') {
+        navigate(`/tools/${results[0].id}`);
+        // sync effect clears searchValue when the route changes
+      }
+    }
+  };
+
   return (
     <header className="app-header">
       <div className="app-header__inner">
@@ -242,6 +299,16 @@ function Header() {
             <span className="app-logo__icon">🧰</span>
             <span className="app-logo__name">BeginnersToolBox</span>
           </Link>
+
+          <input
+            className="app-search"
+            type="search"
+            placeholder="Search tools…"
+            value={searchValue}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            onKeyDown={(e) => handleSearchKey(e.key)}
+            aria-label="Search tools"
+          />
 
           <nav className="app-nav" aria-label="Primary">
             <Link className="app-nav__link" to="/text">Text</Link>
