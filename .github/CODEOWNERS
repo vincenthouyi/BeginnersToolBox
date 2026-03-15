@@ -1,0 +1,20 @@
+# CODEOWNERS
+# Require review from the repo owner on key paths.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default: everything
+* @vincenthouyi
+
+# App code
+/src/ @vincenthouyi
+
+# Tooling / config
+/package.json @vincenthouyi
+/package-lock.json @vincenthouyi
+/vite.config.ts @vincenthouyi
+/tsconfig*.json @vincenthouyi
+/eslint.config.js @vincenthouyi
+/playwright.config.ts @vincenthouyi
+
+# CI / GitHub
+/.github/ @vincenthouyi
